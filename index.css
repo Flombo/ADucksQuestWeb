@@ -1,0 +1,17 @@
+html {
+  top: 0;
+  margin: 0;
+  width: 100%;
+  overflow: hidden;
+}
+html body {
+  top: 0;
+  margin: 0;
+  width: 100%;
+}
+html body canvas {
+  margin: 0;
+  top: 0;
+}
+
+/*# sourceMappingURL=index.css.map */
