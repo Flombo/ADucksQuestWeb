@@ -8,22 +8,19 @@ class Skull extends GameObject {
         super();
         this.color = 'Red';
         this.state = SkullState.RIGHT;
-        this.speed = 144 * 0.01;
+        this.speed = 0.01;
         this.gameObjects = gameObjects;
-        window.requestAnimationFrame(() => this.walk());
     }
 
-    private walk() : void {
+    public walk() : void {
         this.checkIfOutOfBorder();
         this.checkCollisionWithOtherGameObjects();
 
-        if(this.state === SkullState.RIGHT){
-            this.x += this.speed;
-        } else if(this.state === SkullState.LEFT) {
-            this.x -= this.speed;
+        if (this.state === SkullState.RIGHT) {
+            this.x += this.speed * getCurrentFPS();
+        } else if (this.state === SkullState.LEFT) {
+            this.x -= this.speed * getCurrentFPS();
         }
-
-        window.requestAnimationFrame(() => this.walk());
     }
 
     private checkCollisionWithOtherGameObjects() : void {
@@ -37,8 +34,23 @@ class Skull extends GameObject {
             let distance: number = calculateDistance(this.x, gameObject.x, this.y, gameObject.y);
 
             if (distance <= Math.pow((gameObject.width + this.width) / 2, 2)) {
+                this.checkCollisionWithPlayer(gameObject);
                 this.switchWalkingState();
             }
+        }
+    }
+
+    private checkCollisionWithPlayer(gameObject : GameObject) : void {
+        if(gameObject instanceof Player) {
+            let oldState : SkullState = this.state;
+            this.state = SkullState.ATTACK;
+            let player : Player = gameObject as Player;
+
+            if(player.health - 1 >= 0) {
+                player.health = 1;
+            }
+
+            this.state = oldState;
         }
     }
 

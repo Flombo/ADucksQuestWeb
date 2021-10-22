@@ -7,6 +7,7 @@ class Player extends GameObject {
     private canWalkRight : boolean;
     private readonly speed : number;
     private stair : Stair;
+    private _health : number;
 
     constructor(walls : Array<Wall>, stair : Stair) {
         super();
@@ -16,39 +17,38 @@ class Player extends GameObject {
         this.canWalkDown = true;
         this.canWalkLeft = true;
         this.canWalkRight = true;
-        this.speed = 144 * 0.01;
+        this.speed = 0.01;
+        this._health = 3;
         window.addEventListener('keypress', (event : KeyboardEvent) => this.onKeyPressed(event));
     }
 
     private onKeyPressed(event : KeyboardEvent) {
 
             if(event.key === 'w'){
-
                 if (this.canWalkUp) {
                     this.checkWallCollision();
-                    this.y -= this.speed;
+                    this.y -= this.speed * getCurrentFPS();
                 }
             }
 
             if(event.key === 's'){
                 if (this.canWalkDown) {
                     this.checkWallCollision();
-                    this.y += this.speed;
+                    this.y += this.speed * getCurrentFPS();
                 }
             }
 
             if(event.key === 'a'){
                 if (this.canWalkLeft) {
                     this.checkWallCollision();
-                    this.x -= this.speed;
+                    this.x -= this.speed * getCurrentFPS();
                 }
             }
 
             if(event.key === 'd'){
-
                 if (this.canWalkRight) {
                     this.checkWallCollision();
-                    this.x += this.speed;
+                    this.x += this.speed * getCurrentFPS();
                 }
             }
 
@@ -81,23 +81,33 @@ class Player extends GameObject {
     }
 
     private checkWallCollisionRight(wall : Wall) : boolean {
-        let distance : number = calculateDistance(this.x + this.speed, wall.x, this.y, wall.y);
+        let distance : number = calculateDistance(this.x + this.speed * getCurrentFPS(), wall.x, this.y, wall.y);
         return distance > Math.pow((wall.width + this.width) / 2, 2);
     }
 
     private checkWallCollisionLeft(wall: Wall) : boolean {
-        let distance : number = calculateDistance(this.x - this.speed, wall.x, this.y, wall.y);
+        let distance : number = calculateDistance(this.x - this.speed * getCurrentFPS(), wall.x, this.y, wall.y);
         return distance > Math.pow((wall.width + this.width) / 2, 2);
     }
 
     private checkWallCollisionDown(wall : Wall) : boolean {
-        let distance : number = calculateDistance(this.x, wall.x, this.y + this.speed, wall.y);
+        let distance : number = calculateDistance(this.x, wall.x, this.y + this.speed * getCurrentFPS(), wall.y);
         return distance > Math.pow((wall.width + this.width) / 2, 2);
     }
 
     private checkWallCollisionUp(wall : Wall) : boolean {
-        let distance : number = calculateDistance(this.x, wall.x, this.y - this.speed, wall.y);
+        let distance : number = calculateDistance(this.x, wall.x, this.y - this.speed * getCurrentFPS(), wall.y);
         return distance > Math.pow((wall.width + this.width) / 2, 2);
     }
 
+
+    get health(): number {
+        return this._health;
+    }
+
+    set health(value: number) {
+        if(this._health - value >= 0) {
+            this._health -= value;
+        }
+    }
 }

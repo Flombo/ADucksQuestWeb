@@ -10,6 +10,11 @@ html body {
   margin: 0;
   width: 100%;
 }
+html body #playerHealthBar {
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+}
 html body canvas {
   margin: 0;
   top: 0;

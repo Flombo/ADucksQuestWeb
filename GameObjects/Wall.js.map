@@ -1,1 +1,1 @@
-{"version":3,"file":"Wall.js","sourceRoot":"","sources":["Wall.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;AAAA;IAAmB,wBAAU;IAEzB;QAAA,YACI,iBAAO,SAEV;QADG,KAAI,CAAC,KAAK,GAAG,MAAM,CAAC;;IACxB,CAAC;IAEL,WAAC;AAAD,CAAC,AAPD,CAAmB,UAAU,GAO5B"}
+{"version":3,"file":"Wall.js","sourceRoot":"","sources":["Wall.ts"],"names":[],"mappings":"AAAA,MAAM,IAAK,SAAQ,UAAU;IAEzB;QACI,KAAK,EAAE,CAAC;QACR,IAAI,CAAC,KAAK,GAAG,MAAM,CAAC;IACxB,CAAC;CAEJ"}

@@ -1,6 +1,5 @@
 let player : Player;
 let wall : Wall;
-let rendering : Rendering;
 let gameObjects : Array<GameObject>;
 let walls : Array<Wall>;
 
@@ -33,5 +32,5 @@ function init() : void {
 
     gameObjects.push(skull);
 
-    rendering = new Rendering(gameObjects);
+    rendering(gameObjects);
 }
