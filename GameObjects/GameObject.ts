@@ -1,15 +1,16 @@
-class Player {
+class GameObject {
+
     private _x : number;
     private _y : number;
     private _width : number;
     private _height : number;
-    private readonly _color : string;
+    private _color : string;
 
     constructor() {
         this._x = 0;
         this._y = 0;
-        this._height = 30;
         this._width = 30;
+        this._height = 30;
         this._color = 'white';
     }
 
@@ -47,6 +48,10 @@ class Player {
 
     get color(): string {
         return this._color;
+    }
+
+    set color(value: string) {
+        this._color = value;
     }
 
 }
