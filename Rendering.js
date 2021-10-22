@@ -25,6 +25,7 @@ var Rendering = /** @class */ (function () {
             this.context.fillStyle = gameObject.color;
             this.context.fillRect(gameObject.x, gameObject.y, gameObject.width, gameObject.height);
         }
+        console.log(this.currentFPS);
     };
     Object.defineProperty(Rendering.prototype, "currentFPS", {
         get: function () {

@@ -36,6 +36,8 @@ class Rendering {
             this.context.fillStyle = gameObject.color;
             this.context.fillRect(gameObject.x, gameObject.y, gameObject.width, gameObject.height);
         }
+
+        console.log(this.currentFPS);
     }
 
     get currentFPS(): number {

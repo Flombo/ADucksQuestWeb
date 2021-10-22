@@ -20,6 +20,10 @@ function init() {
     }
     player = new Player(walls, stair);
     gameObjects.push(player);
+    var skull = new Skull(gameObjects);
+    skull.x = 0;
+    skull.y = Math.floor(Math.random() * window.innerHeight);
+    gameObjects.push(skull);
     rendering = new Rendering(gameObjects);
 }
 //# sourceMappingURL=index.js.map

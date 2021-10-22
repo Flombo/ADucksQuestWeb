@@ -16,7 +16,7 @@ class Player extends GameObject {
         this.canWalkDown = true;
         this.canWalkLeft = true;
         this.canWalkRight = true;
-        this.speed = 144 * 0.005;
+        this.speed = 144 * 0.01;
         window.addEventListener('keypress', (event : KeyboardEvent) => this.onKeyPressed(event));
     }
 
@@ -73,7 +73,7 @@ class Player extends GameObject {
     }
 
     private checkStairCollision() : void  {
-        let distance : number = this.calculateDistance(this.x, this.stair.x, this.y, this.stair.y);
+        let distance : number = calculateDistance(this.x, this.stair.x, this.y, this.stair.y);
 
         if(distance <= Math.pow((this.stair.width + this.width) / 2, 2)) {
             alert("You Won!");
@@ -81,27 +81,23 @@ class Player extends GameObject {
     }
 
     private checkWallCollisionRight(wall : Wall) : boolean {
-        let distance : number = this.calculateDistance(this.x + this.speed, wall.x, this.y, wall.y);
+        let distance : number = calculateDistance(this.x + this.speed, wall.x, this.y, wall.y);
         return distance > Math.pow((wall.width + this.width) / 2, 2);
     }
 
     private checkWallCollisionLeft(wall: Wall) : boolean {
-        let distance : number = this.calculateDistance(this.x - this.speed, wall.x, this.y, wall.y);
+        let distance : number = calculateDistance(this.x - this.speed, wall.x, this.y, wall.y);
         return distance > Math.pow((wall.width + this.width) / 2, 2);
     }
 
     private checkWallCollisionDown(wall : Wall) : boolean {
-        let distance : number = this.calculateDistance(this.x, wall.x, this.y + this.speed, wall.y);
+        let distance : number = calculateDistance(this.x, wall.x, this.y + this.speed, wall.y);
         return distance > Math.pow((wall.width + this.width) / 2, 2);
     }
 
     private checkWallCollisionUp(wall : Wall) : boolean {
-        let distance : number = this.calculateDistance(this.x, wall.x, this.y - this.speed, wall.y);
+        let distance : number = calculateDistance(this.x, wall.x, this.y - this.speed, wall.y);
         return distance > Math.pow((wall.width + this.width) / 2, 2);
-    }
-
-    private calculateDistance(x1, x2, y1, y2){
-        return Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2);
     }
 
 }

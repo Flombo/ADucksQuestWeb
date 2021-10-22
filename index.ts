@@ -26,5 +26,12 @@ function init() : void {
 
     player = new Player(walls, stair);
     gameObjects.push(player);
+
+    let skull : Skull = new Skull(gameObjects);
+    skull.x = 0;
+    skull.y = Math.floor(Math.random() * window.innerHeight);
+
+    gameObjects.push(skull);
+
     rendering = new Rendering(gameObjects);
 }

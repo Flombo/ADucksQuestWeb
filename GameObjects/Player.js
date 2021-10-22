@@ -23,7 +23,7 @@ var Player = /** @class */ (function (_super) {
         _this.canWalkDown = true;
         _this.canWalkLeft = true;
         _this.canWalkRight = true;
-        _this.speed = 144 * 0.005;
+        _this.speed = 144 * 0.01;
         window.addEventListener('keypress', function (event) { return _this.onKeyPressed(event); });
         return _this;
     }
@@ -67,29 +67,26 @@ var Player = /** @class */ (function (_super) {
         }
     };
     Player.prototype.checkStairCollision = function () {
-        var distance = this.calculateDistance(this.x, this.stair.x, this.y, this.stair.y);
+        var distance = calculateDistance(this.x, this.stair.x, this.y, this.stair.y);
         if (distance <= Math.pow((this.stair.width + this.width) / 2, 2)) {
             alert("You Won!");
         }
     };
     Player.prototype.checkWallCollisionRight = function (wall) {
-        var distance = this.calculateDistance(this.x + this.speed, wall.x, this.y, wall.y);
+        var distance = calculateDistance(this.x + this.speed, wall.x, this.y, wall.y);
         return distance > Math.pow((wall.width + this.width) / 2, 2);
     };
     Player.prototype.checkWallCollisionLeft = function (wall) {
-        var distance = this.calculateDistance(this.x - this.speed, wall.x, this.y, wall.y);
+        var distance = calculateDistance(this.x - this.speed, wall.x, this.y, wall.y);
         return distance > Math.pow((wall.width + this.width) / 2, 2);
     };
     Player.prototype.checkWallCollisionDown = function (wall) {
-        var distance = this.calculateDistance(this.x, wall.x, this.y + this.speed, wall.y);
+        var distance = calculateDistance(this.x, wall.x, this.y + this.speed, wall.y);
         return distance > Math.pow((wall.width + this.width) / 2, 2);
     };
     Player.prototype.checkWallCollisionUp = function (wall) {
-        var distance = this.calculateDistance(this.x, wall.x, this.y - this.speed, wall.y);
+        var distance = calculateDistance(this.x, wall.x, this.y - this.speed, wall.y);
         return distance > Math.pow((wall.width + this.width) / 2, 2);
-    };
-    Player.prototype.calculateDistance = function (x1, x2, y1, y2) {
-        return Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2);
     };
     return Player;
 }(GameObject));
