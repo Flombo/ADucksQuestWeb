@@ -30,7 +30,7 @@ class Skull extends GameObject {
     }
 
     private checkCollisionWithOtherGameObject(gameObject : GameObject) : void {
-        if(!(gameObject instanceof Skull)) {
+        if(gameObject !== this) {
             let distance: number = calculateDistance(this.x, gameObject.x, this.y, gameObject.y);
 
             if (distance <= Math.pow((gameObject.width + this.width) / 2, 2)) {
@@ -63,9 +63,9 @@ class Skull extends GameObject {
     }
 
     private checkIfOutOfBorder() : void {
-        if(this.x >= window.innerWidth){
+        if(this.x > window.innerWidth){
             this.state = SkullState.LEFT;
-        } else if(this.x <= 0) {
+        } else if(this.x < 0) {
             this.state = SkullState.RIGHT;
         }
     }

@@ -46,6 +46,7 @@ function draw() {
         context.fillStyle = gameObject.color;
         context.fillRect(gameObject.x, gameObject.y, gameObject.width, gameObject.height);
         handleSkullWalking(gameObject);
+        handleZombieWalking(gameObject);
         updateHealthBar(gameObject);
     }
 }
@@ -53,6 +54,12 @@ function handleSkullWalking(gameObject) {
     if (gameObject instanceof Skull) {
         let skull = gameObject;
         skull.walk();
+    }
+}
+function handleZombieWalking(gameObject) {
+    if (gameObject instanceof Zombie) {
+        let zombie = gameObject;
+        zombie.walk();
     }
 }
 function updateHealthBar(gameObject) {

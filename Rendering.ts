@@ -52,6 +52,7 @@ function draw() {
         context.fillRect(gameObject.x, gameObject.y, gameObject.width, gameObject.height);
 
         handleSkullWalking(gameObject);
+        handleZombieWalking(gameObject);
         updateHealthBar(gameObject);
     }
 }
@@ -60,6 +61,13 @@ function handleSkullWalking(gameObject : GameObject) {
     if(gameObject instanceof Skull) {
         let skull : Skull = gameObject as Skull;
         skull.walk();
+    }
+}
+
+function handleZombieWalking(gameObject : GameObject) {
+    if(gameObject instanceof Zombie) {
+        let zombie : Zombie = gameObject as Zombie;
+        zombie.walk();
     }
 }
 

@@ -19,10 +19,18 @@ function init() {
     }
     player = new Player(walls, stair);
     gameObjects.push(player);
-    let skull = new Skull(gameObjects);
-    skull.x = 0;
-    skull.y = Math.floor(Math.random() * window.innerHeight);
-    gameObjects.push(skull);
+    for (let i = 0; i < 5; i++) {
+        let skull = new Skull(gameObjects);
+        skull.x = 0;
+        skull.y = Math.floor(Math.random() * window.innerHeight);
+        gameObjects.push(skull);
+    }
+    for (let i = 0; i < 5; i++) {
+        let zombie = new Zombie(gameObjects);
+        zombie.x = Math.random() * window.innerWidth;
+        zombie.y = Math.random() * window.innerHeight;
+        gameObjects.push(zombie);
+    }
     rendering(gameObjects);
 }
 //# sourceMappingURL=index.js.map

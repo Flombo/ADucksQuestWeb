@@ -26,11 +26,20 @@ function init() : void {
     player = new Player(walls, stair);
     gameObjects.push(player);
 
-    let skull : Skull = new Skull(gameObjects);
-    skull.x = 0;
-    skull.y = Math.floor(Math.random() * window.innerHeight);
+    for(let i = 0; i < 5; i++) {
+        let skull: Skull = new Skull(gameObjects);
+        skull.x = 0;
+        skull.y = Math.floor(Math.random() * window.innerHeight);
+        gameObjects.push(skull);
+    }
 
-    gameObjects.push(skull);
+    for(let i = 0; i < 5; i++) {
+        let zombie: Zombie = new Zombie(gameObjects);
+        zombie.x = Math.random() * window.innerWidth;
+        zombie.y = Math.random() * window.innerHeight;
+        gameObjects.push(zombie);
+    }
+
 
     rendering(gameObjects);
 }
