@@ -13,14 +13,14 @@ function rendering(gameObjects) {
     canvas = document.getElementsByTagName('canvas')[0];
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
-    context = this.canvas.getContext('2d');
+    context = canvas.getContext('2d');
     playerHealthBar = document.getElementById('playerHealthBar');
     isRunning = true;
     window.addEventListener('keydown', (event) => { pauseGame(event); });
     window.requestAnimationFrame((timestamp) => { gameLoop(timestamp); });
 }
 function gameLoop(timestamp) {
-    if (this.isRunning) {
+    if (isRunning) {
         secondsPassed = (timestamp - oldTimestamp) / 1000;
         oldTimestamp = timestamp;
         currentFPS = Math.round(1 / secondsPassed);

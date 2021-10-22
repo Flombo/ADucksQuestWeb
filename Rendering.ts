@@ -15,7 +15,7 @@ function rendering(gameObjects : Array<GameObject>) {
     canvas = document.getElementsByTagName('canvas')[0];
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
-    context = this.canvas.getContext('2d');
+    context = canvas.getContext('2d');
     playerHealthBar = document.getElementById('playerHealthBar');
     isRunning = true;
     window.addEventListener('keydown', (event) => {pauseGame(event)});
@@ -23,7 +23,7 @@ function rendering(gameObjects : Array<GameObject>) {
 }
 
 function gameLoop(timestamp) {
-    if (this.isRunning) {
+    if (isRunning) {
         secondsPassed = (timestamp - oldTimestamp) / 1000;
         oldTimestamp = timestamp;
         currentFPS = Math.round(1 / secondsPassed);
