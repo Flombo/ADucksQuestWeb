@@ -15,9 +15,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var Player = /** @class */ (function (_super) {
     __extends(Player, _super);
-    function Player(walls) {
+    function Player(walls, stair) {
         var _this = _super.call(this) || this;
         _this.walls = walls;
+        _this.stair = stair;
         _this.canWalkUp = true;
         _this.canWalkDown = true;
         _this.canWalkLeft = true;
@@ -51,6 +52,7 @@ var Player = /** @class */ (function (_super) {
                 this.x += this.speed;
             }
         }
+        this.checkStairCollision();
     };
     Player.prototype.checkWallCollision = function () {
         for (var i = 0; i < this.walls.length; i++) {
@@ -62,6 +64,12 @@ var Player = /** @class */ (function (_super) {
             if (!this.canWalkRight || !this.canWalkLeft || !this.canWalkUp || !this.canWalkDown) {
                 break;
             }
+        }
+    };
+    Player.prototype.checkStairCollision = function () {
+        var distance = this.calculateDistance(this.x, this.stair.x, this.y, this.stair.y);
+        if (distance <= Math.pow((this.stair.width + this.width) / 2, 2)) {
+            alert("You Won!");
         }
     };
     Player.prototype.checkWallCollisionRight = function (wall) {

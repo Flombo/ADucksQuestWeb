@@ -6,10 +6,12 @@ class Player extends GameObject {
     private canWalkLeft : boolean;
     private canWalkRight : boolean;
     private readonly speed : number;
+    private stair : Stair;
 
-    constructor(walls : Array<Wall>) {
+    constructor(walls : Array<Wall>, stair : Stair) {
         super();
         this.walls = walls;
+        this.stair = stair;
         this.canWalkUp = true;
         this.canWalkDown = true;
         this.canWalkLeft = true;
@@ -50,6 +52,7 @@ class Player extends GameObject {
                 }
             }
 
+            this.checkStairCollision();
     }
 
     private checkWallCollision() : void {
@@ -66,6 +69,14 @@ class Player extends GameObject {
             if(!this.canWalkRight || !this.canWalkLeft || !this.canWalkUp || !this.canWalkDown){
                 break;
             }
+        }
+    }
+
+    private checkStairCollision() : void  {
+        let distance : number = this.calculateDistance(this.x, this.stair.x, this.y, this.stair.y);
+
+        if(distance <= Math.pow((this.stair.width + this.width) / 2, 2)) {
+            alert("You Won!");
         }
     }
 
