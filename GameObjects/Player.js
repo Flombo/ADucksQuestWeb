@@ -1,76 +1,73 @@
 class Player extends GameObject {
-    constructor(walls, stair) {
+    constructor(grid) {
         super();
-        this.walls = walls;
-        this.stair = stair;
-        this.canWalkUp = true;
-        this.canWalkDown = true;
-        this.canWalkLeft = true;
-        this.canWalkRight = true;
-        this.speed = 0.01;
         this._health = 3;
+        this.stepEvent = new CustomEvent("step", {
+            bubbles: true,
+            cancelable: true
+        });
+        this.grid = grid;
         window.addEventListener('keypress', (event) => this.onKeyPressed(event));
     }
     onKeyPressed(event) {
-        if (event.key === 'w') {
-            if (this.canWalkUp) {
-                this.checkWallCollision();
-                this.y -= this.speed * getCurrentFPS();
+        if (isRunning) {
+            if (event.key === 'w') {
+                if (this.checkCollision(this.x, this.y - 1)) {
+                    this.grid[this.y][this.x] = null;
+                    this.y--;
+                    this.grid[this.y][this.x] = this;
+                }
             }
-        }
-        if (event.key === 's') {
-            if (this.canWalkDown) {
-                this.checkWallCollision();
-                this.y += this.speed * getCurrentFPS();
+            if (event.key === 's') {
+                if (this.checkCollision(this.x, this.y + 1)) {
+                    this.grid[this.y][this.x] = null;
+                    this.y++;
+                    this.grid[this.y][this.x] = this;
+                }
             }
-        }
-        if (event.key === 'a') {
-            if (this.canWalkLeft) {
-                this.checkWallCollision();
-                this.x -= this.speed * getCurrentFPS();
+            if (event.key === 'a') {
+                if (this.checkCollision(this.x - 1, this.y)) {
+                    this.grid[this.y][this.x] = null;
+                    this.x--;
+                    this.grid[this.y][this.x] = this;
+                }
             }
-        }
-        if (event.key === 'd') {
-            if (this.canWalkRight) {
-                this.checkWallCollision();
-                this.x += this.speed * getCurrentFPS();
+            if (event.key === 'd') {
+                if (this.checkCollision(this.x + 1, this.y)) {
+                    this.grid[this.y][this.x] = null;
+                    this.x++;
+                    this.grid[this.y][this.x] = this;
+                }
             }
-        }
-        this.checkStairCollision();
-    }
-    checkWallCollision() {
-        for (let i = 0; i < this.walls.length; i++) {
-            let wall = this.walls[i];
-            this.canWalkUp = this.checkWallCollisionUp(wall);
-            this.canWalkDown = this.checkWallCollisionDown(wall);
-            this.canWalkLeft = this.checkWallCollisionLeft(wall);
-            this.canWalkRight = this.checkWallCollisionRight(wall);
-            if (!this.canWalkRight || !this.canWalkLeft || !this.canWalkUp || !this.canWalkDown) {
-                break;
-            }
+            window.dispatchEvent(this.stepEvent);
         }
     }
-    checkStairCollision() {
-        let distance = calculateDistance(this.x, this.stair.x, this.y, this.stair.y);
-        if (distance <= Math.pow((this.stair.width + this.width) / 2, 2)) {
-            alert("You Won!");
+    checkCollision(x, y) {
+        let canWalk = true;
+        console.log(this.grid[y][x]);
+        if (x > this.grid[0].length) {
+            canWalk = false;
         }
+        else if (x < 0) {
+            canWalk = false;
+        }
+        else if (y < 0) {
+            canWalk = false;
+        }
+        else if (y > this.grid.length) {
+            canWalk = false;
+        }
+        else if (this.grid[y][x] !== null) {
+            this.checkCollisionWithOtherGameObjects(this.grid[y][x]);
+            canWalk = false;
+        }
+        return canWalk;
     }
-    checkWallCollisionRight(wall) {
-        let distance = calculateDistance(this.x + this.speed * getCurrentFPS(), wall.x, this.y, wall.y);
-        return distance > Math.pow((wall.width + this.width) / 2, 2);
-    }
-    checkWallCollisionLeft(wall) {
-        let distance = calculateDistance(this.x - this.speed * getCurrentFPS(), wall.x, this.y, wall.y);
-        return distance > Math.pow((wall.width + this.width) / 2, 2);
-    }
-    checkWallCollisionDown(wall) {
-        let distance = calculateDistance(this.x, wall.x, this.y + this.speed * getCurrentFPS(), wall.y);
-        return distance > Math.pow((wall.width + this.width) / 2, 2);
-    }
-    checkWallCollisionUp(wall) {
-        let distance = calculateDistance(this.x, wall.x, this.y - this.speed * getCurrentFPS(), wall.y);
-        return distance > Math.pow((wall.width + this.width) / 2, 2);
+    checkCollisionWithOtherGameObjects(gameObject) {
+        if (gameObject instanceof Stair) {
+            isRunning = false;
+            alert('You won!');
+        }
     }
     get health() {
         return this._health;

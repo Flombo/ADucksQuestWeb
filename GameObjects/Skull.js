@@ -1,34 +1,36 @@
 class Skull extends GameObject {
-    constructor(gameObjects) {
+    constructor(grid) {
         super();
         this.color = 'Red';
         this.state = SkullState.RIGHT;
-        this.speed = 0.01;
-        this.gameObjects = gameObjects;
+        this.grid = grid;
+        window.addEventListener('step', () => this.walk());
     }
     walk() {
-        this.checkIfOutOfBorder();
-        this.checkCollisionWithOtherGameObjects();
         if (this.state === SkullState.RIGHT) {
-            this.x += this.speed * getCurrentFPS();
-        }
-        else if (this.state === SkullState.LEFT) {
-            this.x -= this.speed * getCurrentFPS();
-        }
-    }
-    checkCollisionWithOtherGameObjects() {
-        for (let i = 0; i < this.gameObjects.length; i++) {
-            this.checkCollisionWithOtherGameObject(this.gameObjects[i]);
-        }
-    }
-    checkCollisionWithOtherGameObject(gameObject) {
-        if (gameObject !== this) {
-            let distance = calculateDistance(this.x, gameObject.x, this.y, gameObject.y);
-            if (distance <= Math.pow((gameObject.width + this.width) / 2, 2)) {
-                this.checkCollisionWithPlayer(gameObject);
-                this.switchWalkingState();
+            if (!this.checkIfOutOfBorder(this.x + 1)) {
+                if (!this.checkCollisionWithOtherGameObject(this.x + 1)) {
+                    this.x++;
+                }
             }
         }
+        else if (this.state === SkullState.LEFT) {
+            if (!this.checkIfOutOfBorder(this.x - 1)) {
+                if (!this.checkCollisionWithOtherGameObject(this.x - 1)) {
+                    this.x--;
+                }
+            }
+        }
+    }
+    checkCollisionWithOtherGameObject(x) {
+        let gameObject = this.grid[this.y][x];
+        let isColliding = false;
+        if (gameObject !== this && gameObject !== null) {
+            isColliding = true;
+            this.checkCollisionWithPlayer(gameObject);
+            this.switchWalkingState();
+        }
+        return isColliding;
     }
     checkCollisionWithPlayer(gameObject) {
         if (gameObject instanceof Player) {
@@ -49,13 +51,17 @@ class Skull extends GameObject {
             this.state = SkullState.RIGHT;
         }
     }
-    checkIfOutOfBorder() {
-        if (this.x > window.innerWidth) {
+    checkIfOutOfBorder(x) {
+        let isOufOfBorder = false;
+        if (x > this.grid[this.y].length) {
+            isOufOfBorder = true;
             this.state = SkullState.LEFT;
         }
-        else if (this.x < 0) {
+        else if (x < 0) {
+            isOufOfBorder = true;
             this.state = SkullState.RIGHT;
         }
+        return isOufOfBorder;
     }
 }
 //# sourceMappingURL=Skull.js.map

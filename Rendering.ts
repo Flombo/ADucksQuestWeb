@@ -1,15 +1,16 @@
 let currentFPS : number;
 let oldTimestamp : number;
 let secondsPassed : number;
-let selfGameObjects : Array<GameObject>;
+let selfGrid : Array<Array<GameObject>>;
 let canvas : HTMLCanvasElement;
 let context : CanvasRenderingContext2D;
 let playerHealthBar : HTMLElement;
 let isRunning : boolean;
+let showGrid : boolean;
 
 
-function rendering(gameObjects : Array<GameObject>) {
-    selfGameObjects = gameObjects;
+function rendering(grid : Array<Array<GameObject>>) {
+    selfGrid = grid;
     oldTimestamp = 0;
     secondsPassed = 0;
     canvas = document.getElementsByTagName('canvas')[0];
@@ -18,6 +19,7 @@ function rendering(gameObjects : Array<GameObject>) {
     context = canvas.getContext('2d');
     playerHealthBar = document.getElementById('playerHealthBar');
     isRunning = true;
+    showGrid = true;
     window.addEventListener('keydown', (event) => {pauseGame(event)});
     window.requestAnimationFrame((timestamp) => {gameLoop(timestamp)});
 }
@@ -40,34 +42,29 @@ function pauseGame(event : KeyboardEvent) {
             isRunning = true;
             window.requestAnimationFrame((timestamp) => gameLoop(timestamp));
         }
+    } else if(event.key === 'g') {
+        showGrid = !showGrid;
     }
 }
 
 function draw() {
     context.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-    for(let i = 0; i < selfGameObjects.length; i++){
-        let gameObject : GameObject = selfGameObjects[i];
-        context.fillStyle = gameObject.color;
-        context.fillRect(gameObject.x, gameObject.y, gameObject.width, gameObject.height);
+    for(let y : number = 0; y < selfGrid.length; y++){
+        for(let x : number = 0; x < selfGrid[y].length; x++) {
+            let gameObject : GameObject = selfGrid[y][x];
 
-        handleSkullWalking(gameObject);
-        handleZombieWalking(gameObject);
-        updateHealthBar(gameObject);
-    }
-}
+            if(gameObject !== null) {
+                context.fillStyle = gameObject.color;
+                context.fillRect(gameObject.x * 30, gameObject.y * 30, gameObject.width, gameObject.height);
+                updateHealthBar(gameObject);
+            }
 
-function handleSkullWalking(gameObject : GameObject) {
-    if(gameObject instanceof Skull) {
-        let skull : Skull = gameObject as Skull;
-        skull.walk();
-    }
-}
-
-function handleZombieWalking(gameObject : GameObject) {
-    if(gameObject instanceof Zombie) {
-        let zombie : Zombie = gameObject as Zombie;
-        zombie.walk();
+            if(showGrid) {
+                context.strokeStyle = 'Lightgreen';
+                context.strokeRect(x * 30, y * 30, 30, 30);
+            }
+        }
     }
 }
 

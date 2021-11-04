@@ -1,13 +1,14 @@
 let currentFPS;
 let oldTimestamp;
 let secondsPassed;
-let selfGameObjects;
+let selfGrid;
 let canvas;
 let context;
 let playerHealthBar;
 let isRunning;
-function rendering(gameObjects) {
-    selfGameObjects = gameObjects;
+let showGrid;
+function rendering(grid) {
+    selfGrid = grid;
     oldTimestamp = 0;
     secondsPassed = 0;
     canvas = document.getElementsByTagName('canvas')[0];
@@ -16,6 +17,7 @@ function rendering(gameObjects) {
     context = canvas.getContext('2d');
     playerHealthBar = document.getElementById('playerHealthBar');
     isRunning = true;
+    showGrid = true;
     window.addEventListener('keydown', (event) => { pauseGame(event); });
     window.requestAnimationFrame((timestamp) => { gameLoop(timestamp); });
 }
@@ -38,28 +40,25 @@ function pauseGame(event) {
             window.requestAnimationFrame((timestamp) => gameLoop(timestamp));
         }
     }
+    else if (event.key === 'g') {
+        showGrid = !showGrid;
+    }
 }
 function draw() {
     context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    for (let i = 0; i < selfGameObjects.length; i++) {
-        let gameObject = selfGameObjects[i];
-        context.fillStyle = gameObject.color;
-        context.fillRect(gameObject.x, gameObject.y, gameObject.width, gameObject.height);
-        handleSkullWalking(gameObject);
-        handleZombieWalking(gameObject);
-        updateHealthBar(gameObject);
-    }
-}
-function handleSkullWalking(gameObject) {
-    if (gameObject instanceof Skull) {
-        let skull = gameObject;
-        skull.walk();
-    }
-}
-function handleZombieWalking(gameObject) {
-    if (gameObject instanceof Zombie) {
-        let zombie = gameObject;
-        zombie.walk();
+    for (let y = 0; y < selfGrid.length; y++) {
+        for (let x = 0; x < selfGrid[y].length; x++) {
+            let gameObject = selfGrid[y][x];
+            if (gameObject !== null) {
+                context.fillStyle = gameObject.color;
+                context.fillRect(gameObject.x * 30, gameObject.y * 30, gameObject.width, gameObject.height);
+                updateHealthBar(gameObject);
+            }
+            if (showGrid) {
+                context.strokeStyle = 'Lightgreen';
+                context.strokeRect(x * 30, y * 30, 30, 30);
+            }
+        }
     }
 }
 function updateHealthBar(gameObject) {

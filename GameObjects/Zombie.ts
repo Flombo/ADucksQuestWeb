@@ -1,57 +1,73 @@
 class Zombie extends GameObject{
 
     private state : ZombieState;
-    private readonly speed : number;
-    private readonly gameObjects : Array<GameObject>;
+    private readonly grid : Array<Array<GameObject>>;
     private readonly walkingChoices : Array<ZombieState>;
 
-    constructor(gameObjects : Array<GameObject>) {
+    constructor(grid : Array<Array<GameObject>>) {
         super();
         this.color = 'Violet';
         this.state = ZombieState.RIGHT;
-        this.speed = 0.008;
-        this.gameObjects = gameObjects;
+        this.grid = grid;
         this.walkingChoices = new Array<ZombieState>();
         this.walkingChoices.push(ZombieState.RIGHT, ZombieState.UP, ZombieState.LEFT, ZombieState.DOWN);
+        window.addEventListener('step', () => this.walk());
     }
 
     public walk() : void {
-        this.checkIfOutOfBorder();
-        this.checkCollisionWithOtherGameObjects();
-
         switch (this.state){
             case ZombieState.DOWN:
-                this.y += this.speed * getCurrentFPS();
+                if(!this.checkIfOutOfBorder(this.x, this.y + 1)) {
+                    if(!this.checkCollisionWithOtherGameObjects(this.x, this.y + 1)) {
+                        this.grid[this.y][this.x] = null;
+                        this.y++;
+                        this.grid[this.y][this.x] = this;
+
+                    }
+                }
                 break;
             case ZombieState.UP:
-                this.y -= this.speed * getCurrentFPS();
+                if(!this.checkIfOutOfBorder(this.x, this.y - 1)) {
+                    if(!this.checkCollisionWithOtherGameObjects(this.x, this.y - 1)) {
+                        this.grid[this.y][this.x] = null;
+                        this.y--;
+                        this.grid[this.y][this.x] = this;
+                    }
+                }
                 break;
             case ZombieState.LEFT:
-                this.x -= this.speed * getCurrentFPS();
+                if(!this.checkIfOutOfBorder(this.x - 1, this.y)) {
+                    if(!this.checkCollisionWithOtherGameObjects(this.x - 1, this.y)) {
+                        this.grid[this.y][this.x] = null;
+                        this.x--;
+                        this.grid[this.y][this.x] = this;
+                    }
+                }
                 break;
             case ZombieState.RIGHT:
-                this.x += this.speed * getCurrentFPS();
+                if(!this.checkIfOutOfBorder(this.x + 1, this.y)) {
+                    if(!this.checkCollisionWithOtherGameObjects(this.x + 1, this.y)) {
+                        this.grid[this.y][this.x] = null;
+                        this.x++;
+                        this.grid[this.y][this.x] = this;
+                    }
+                }
                 break;
         }
 
     }
 
-    private checkCollisionWithOtherGameObjects() : void {
-        for(let i = 0; i < this.gameObjects.length; i++){
-            this.checkCollisionWithOtherGameObject(this.gameObjects[i]);
-        }
-    }
+    private checkCollisionWithOtherGameObjects(x : number, y : number) : boolean {
+        let isColliding : boolean = false;
+        let gameObject : GameObject = this.grid[y][x];
 
-    private checkCollisionWithOtherGameObject(gameObject : GameObject) : void {
-        if(gameObject !== this) {
-            let distance: number = calculateDistance(this.x, gameObject.x, this.y, gameObject.y);
-
-            if (distance <= Math.pow((gameObject.width + this.width) / 2, 2)) {
-                let oldState: ZombieState = this.state;
-                this.checkCollisionWithPlayer(gameObject);
-                this.switchWalkingState(oldState);
-            }
+        if(gameObject !== null) {
+            let oldState : ZombieState = this.state;
+            this.checkCollisionWithPlayer(gameObject);
+            this.switchWalkingState(oldState);
         }
+
+        return isColliding;
     }
 
     private checkCollisionWithPlayer(gameObject : GameObject) : void {
@@ -70,21 +86,27 @@ class Zombie extends GameObject{
         let oldStateIndex : number = remainingChoices.indexOf(oldState);
         remainingChoices.slice(oldStateIndex, 1);
 
-        console.log(remainingChoices);
-
         this.state = remainingChoices[Math.floor(Math.random() * remainingChoices.length)];
     }
 
-    private checkIfOutOfBorder() : void {
-        if(this.x > window.innerWidth){
+    private checkIfOutOfBorder(x : number, y : number) : boolean {
+        let isOutOfBorder : boolean = false;
+
+        if(x > this.grid[0].length){
+            isOutOfBorder = true;
             this.switchWalkingState(this.state);
-        } else if(this.x < 0) {
+        } else if(x < 0) {
+            isOutOfBorder = true;
             this.switchWalkingState(this.state);
-        } else if(this.y > window.innerHeight){
+        } else if(y > this.grid.length){
+            isOutOfBorder = true;
             this.switchWalkingState(this.state);
-        } else if(this.y < 0) {
+        } else if(y < 0) {
+            isOutOfBorder = true;
             this.switchWalkingState(this.state);
         }
+
+        return isOutOfBorder;
     }
 
 }
