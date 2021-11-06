@@ -75,6 +75,23 @@ function init() : void {
         grid[y][x] = zombie;
     }
 
+    x = Math.floor(Math.random() * xGrid);
+    y = Math.floor(Math.random() * yGrid);
+
+    let hearth : Heart = new Heart();
+    hearth.y = y;
+    hearth.x = x;
+
+    grid[y][x] = hearth;
+
+    x = Math.floor(Math.random() * xGrid);
+    y = Math.floor(Math.random() * yGrid);
+
+    let coin : Coin = new Coin();
+    coin.y = y;
+    coin.x = x;
+
+    grid[y][x] = coin;
 
     rendering(grid);
 }

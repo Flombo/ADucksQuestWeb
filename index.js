@@ -51,6 +51,18 @@ function init() {
         zombie.y = y;
         grid[y][x] = zombie;
     }
+    x = Math.floor(Math.random() * xGrid);
+    y = Math.floor(Math.random() * yGrid);
+    let hearth = new Heart();
+    hearth.y = y;
+    hearth.x = x;
+    grid[y][x] = hearth;
+    x = Math.floor(Math.random() * xGrid);
+    y = Math.floor(Math.random() * yGrid);
+    let coin = new Coin();
+    coin.y = y;
+    coin.x = x;
+    grid[y][x] = coin;
     rendering(grid);
 }
 //# sourceMappingURL=index.js.map

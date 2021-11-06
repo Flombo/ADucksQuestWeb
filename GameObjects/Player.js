@@ -54,12 +54,12 @@ class Player extends GameObject {
             canWalk = false;
         }
         else if (this.grid[y][x] !== null) {
-            this.checkCollisionWithOtherGameObjects(this.grid[y][x]);
-            canWalk = false;
+            canWalk = this.checkCollisionWithOtherGameObjects(this.grid[y][x]);
         }
         return canWalk;
     }
     checkCollisionWithOtherGameObjects(gameObject) {
+        let canWalk = false;
         if (gameObject instanceof Stair) {
             isRunning = false;
             alert('You won!');
@@ -67,6 +67,15 @@ class Player extends GameObject {
         if (gameObject instanceof Zombie || gameObject instanceof Skull) {
             this.health = 1;
         }
+        if (gameObject instanceof Heart) {
+            this._health++;
+            canWalk = true;
+        }
+        if (gameObject instanceof Coin) {
+            this._score++;
+            canWalk = true;
+        }
+        return canWalk;
     }
     get health() {
         return this._health;
