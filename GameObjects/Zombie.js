@@ -11,47 +11,42 @@ class Zombie extends GameObject {
     walk() {
         switch (this.state) {
             case ZombieState.DOWN:
-                if (!this.checkIfOutOfBorder(this.x, this.y + 1)) {
-                    if (!this.checkCollisionWithOtherGameObjects(this.x, this.y + 1)) {
-                        this.grid[this.y][this.x] = null;
-                        this.y++;
-                        this.grid[this.y][this.x] = this;
-                    }
-                }
+                this.moveZombie(this.y + 1, this.x);
                 break;
             case ZombieState.UP:
-                if (!this.checkIfOutOfBorder(this.x, this.y - 1)) {
-                    if (!this.checkCollisionWithOtherGameObjects(this.x, this.y - 1)) {
-                        this.grid[this.y][this.x] = null;
-                        this.y--;
-                        this.grid[this.y][this.x] = this;
-                    }
-                }
+                this.moveZombie(this.y - 1, this.x);
                 break;
             case ZombieState.LEFT:
-                if (!this.checkIfOutOfBorder(this.x - 1, this.y)) {
-                    if (!this.checkCollisionWithOtherGameObjects(this.x - 1, this.y)) {
-                        this.grid[this.y][this.x] = null;
-                        this.x--;
-                        this.grid[this.y][this.x] = this;
-                    }
-                }
+                this.moveZombie(this.y, this.x - 1);
                 break;
             case ZombieState.RIGHT:
-                if (!this.checkIfOutOfBorder(this.x + 1, this.y)) {
-                    if (!this.checkCollisionWithOtherGameObjects(this.x + 1, this.y)) {
-                        this.grid[this.y][this.x] = null;
-                        this.x++;
-                        this.grid[this.y][this.x] = this;
-                    }
-                }
+                this.moveZombie(this.y, this.x + 1);
                 break;
         }
     }
-    checkCollisionWithOtherGameObjects(x, y) {
+    switchWalkingState(oldState) {
+        let remainingChoices = this.walkingChoices;
+        let oldStateIndex = remainingChoices.indexOf(oldState);
+        remainingChoices.slice(oldStateIndex, 1);
+        this.state = remainingChoices[Math.floor(Math.random() * remainingChoices.length)];
+    }
+    moveZombie(newY, newX) {
+        if (!this.checkIfOutOfBorder(newY, newX)) {
+            if (!this.checkCollisionWithOtherGameObjects(newY, newX)) {
+                let oldX = this.x;
+                let oldY = this.y;
+                this.y = newY;
+                this.x = newX;
+                this.grid[this.y][this.x] = this;
+                this.grid[oldY][oldX] = null;
+            }
+        }
+    }
+    checkCollisionWithOtherGameObjects(y, x) {
         let isColliding = false;
         let gameObject = this.grid[y][x];
         if (gameObject !== null) {
+            isColliding = true;
             let oldState = this.state;
             this.checkCollisionWithPlayer(gameObject);
             this.switchWalkingState(oldState);
@@ -67,15 +62,9 @@ class Zombie extends GameObject {
             }
         }
     }
-    switchWalkingState(oldState) {
-        let remainingChoices = this.walkingChoices;
-        let oldStateIndex = remainingChoices.indexOf(oldState);
-        remainingChoices.slice(oldStateIndex, 1);
-        this.state = remainingChoices[Math.floor(Math.random() * remainingChoices.length)];
-    }
-    checkIfOutOfBorder(x, y) {
+    checkIfOutOfBorder(y, x) {
         let isOutOfBorder = false;
-        if (x > this.grid[0].length) {
+        if (x > this.grid[0].length - 1) {
             isOutOfBorder = true;
             this.switchWalkingState(this.state);
         }
@@ -83,7 +72,7 @@ class Zombie extends GameObject {
             isOutOfBorder = true;
             this.switchWalkingState(this.state);
         }
-        else if (y > this.grid.length) {
+        else if (y > this.grid.length - 1) {
             isOutOfBorder = true;
             this.switchWalkingState(this.state);
         }

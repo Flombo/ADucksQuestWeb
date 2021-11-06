@@ -6,8 +6,8 @@ window.onload = init;
 
 function init() : void {
 
-    let xGrid : number = Math.floor(window.innerWidth / 30);
-    let yGrid : number = Math.floor(window.innerHeight / 30);
+    let xGrid : number = Math.floor(window.innerWidth / 30) - 1;
+    let yGrid : number = Math.floor(window.innerHeight / 30) - 1;
     let x : number;
     let y: number;
 
@@ -33,7 +33,7 @@ function init() : void {
 
     walls = new Array<Wall>();
 
-    for(let i = 0; i < 2; i++) {
+    for(let i = 0; i < 100; i++) {
         wall = new Wall();
 
         x = Math.floor(Math.random() * xGrid);

@@ -3,8 +3,8 @@ let wall;
 let walls;
 window.onload = init;
 function init() {
-    let xGrid = Math.floor(window.innerWidth / 30);
-    let yGrid = Math.floor(window.innerHeight / 30);
+    let xGrid = Math.floor(window.innerWidth / 30) - 1;
+    let yGrid = Math.floor(window.innerHeight / 30) - 1;
     let x;
     let y;
     let grid = new Array();
@@ -21,7 +21,7 @@ function init() {
     stair.y = y;
     grid[y][x] = stair;
     walls = new Array();
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 100; i++) {
         wall = new Wall();
         x = Math.floor(Math.random() * xGrid);
         y = Math.floor(Math.random() * yGrid);

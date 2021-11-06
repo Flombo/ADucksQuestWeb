@@ -17,51 +17,50 @@ class Zombie extends GameObject{
     public walk() : void {
         switch (this.state){
             case ZombieState.DOWN:
-                if(!this.checkIfOutOfBorder(this.x, this.y + 1)) {
-                    if(!this.checkCollisionWithOtherGameObjects(this.x, this.y + 1)) {
-                        this.grid[this.y][this.x] = null;
-                        this.y++;
-                        this.grid[this.y][this.x] = this;
-
-                    }
-                }
+                this.moveZombie(this.y + 1, this.x);
                 break;
             case ZombieState.UP:
-                if(!this.checkIfOutOfBorder(this.x, this.y - 1)) {
-                    if(!this.checkCollisionWithOtherGameObjects(this.x, this.y - 1)) {
-                        this.grid[this.y][this.x] = null;
-                        this.y--;
-                        this.grid[this.y][this.x] = this;
-                    }
-                }
+                this.moveZombie(this.y - 1, this.x);
                 break;
             case ZombieState.LEFT:
-                if(!this.checkIfOutOfBorder(this.x - 1, this.y)) {
-                    if(!this.checkCollisionWithOtherGameObjects(this.x - 1, this.y)) {
-                        this.grid[this.y][this.x] = null;
-                        this.x--;
-                        this.grid[this.y][this.x] = this;
-                    }
-                }
+                this.moveZombie(this.y, this.x - 1);
                 break;
             case ZombieState.RIGHT:
-                if(!this.checkIfOutOfBorder(this.x + 1, this.y)) {
-                    if(!this.checkCollisionWithOtherGameObjects(this.x + 1, this.y)) {
-                        this.grid[this.y][this.x] = null;
-                        this.x++;
-                        this.grid[this.y][this.x] = this;
-                    }
-                }
+                this.moveZombie(this.y, this.x + 1);
                 break;
         }
 
     }
 
-    private checkCollisionWithOtherGameObjects(x : number, y : number) : boolean {
+    private switchWalkingState(oldState : ZombieState) : void {
+        let remainingChoices : Array<ZombieState> = this.walkingChoices;
+        let oldStateIndex : number = remainingChoices.indexOf(oldState);
+        remainingChoices.slice(oldStateIndex, 1);
+
+        this.state = remainingChoices[Math.floor(Math.random() * remainingChoices.length)];
+    }
+
+    private moveZombie(newY : number, newX : number) : void {
+        if(!this.checkIfOutOfBorder(newY, newX)) {
+            if(!this.checkCollisionWithOtherGameObjects(newY, newX)) {
+                let oldX : number = this.x;
+                let oldY : number = this.y;
+
+                this.y = newY;
+                this.x = newX;
+
+                this.grid[this.y][this.x] = this;
+                this.grid[oldY][oldX] = null;
+            }
+        }
+    }
+
+    private checkCollisionWithOtherGameObjects(y : number, x : number) : boolean {
         let isColliding : boolean = false;
         let gameObject : GameObject = this.grid[y][x];
 
         if(gameObject !== null) {
+            isColliding = true;
             let oldState : ZombieState = this.state;
             this.checkCollisionWithPlayer(gameObject);
             this.switchWalkingState(oldState);
@@ -81,24 +80,16 @@ class Zombie extends GameObject{
         }
     }
 
-    private switchWalkingState(oldState : ZombieState) : void {
-        let remainingChoices : Array<ZombieState> = this.walkingChoices;
-        let oldStateIndex : number = remainingChoices.indexOf(oldState);
-        remainingChoices.slice(oldStateIndex, 1);
-
-        this.state = remainingChoices[Math.floor(Math.random() * remainingChoices.length)];
-    }
-
-    private checkIfOutOfBorder(x : number, y : number) : boolean {
+    private checkIfOutOfBorder(y : number, x : number) : boolean {
         let isOutOfBorder : boolean = false;
 
-        if(x > this.grid[0].length){
+        if(x > this.grid[0].length - 1){
             isOutOfBorder = true;
             this.switchWalkingState(this.state);
         } else if(x < 0) {
             isOutOfBorder = true;
             this.switchWalkingState(this.state);
-        } else if(y > this.grid.length){
+        } else if(y > this.grid.length - 1){
             isOutOfBorder = true;
             this.switchWalkingState(this.state);
         } else if(y < 0) {

@@ -16,22 +16,13 @@ function rendering(grid : Array<Array<GameObject>>) {
     canvas = document.getElementsByTagName('canvas')[0];
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
+    canvas.style.marginLeft = "10px";
     context = canvas.getContext('2d');
     playerHealthBar = document.getElementById('playerHealthBar');
     isRunning = true;
     showGrid = true;
     window.addEventListener('keydown', (event) => {pauseGame(event)});
     window.requestAnimationFrame((timestamp) => {gameLoop(timestamp)});
-}
-
-function gameLoop(timestamp) {
-    if (isRunning) {
-        secondsPassed = (timestamp - oldTimestamp) / 1000;
-        oldTimestamp = timestamp;
-        currentFPS = Math.round(1 / secondsPassed);
-        draw();
-        window.requestAnimationFrame((timestamp) => gameLoop(timestamp));
-    }
 }
 
 function pauseGame(event : KeyboardEvent) {
@@ -44,6 +35,16 @@ function pauseGame(event : KeyboardEvent) {
         }
     } else if(event.key === 'g') {
         showGrid = !showGrid;
+    }
+}
+
+function gameLoop(timestamp) {
+    if (isRunning) {
+        secondsPassed = (timestamp - oldTimestamp) / 1000;
+        oldTimestamp = timestamp;
+        currentFPS = Math.round(1 / secondsPassed);
+        draw();
+        window.requestAnimationFrame((timestamp) => gameLoop(timestamp));
     }
 }
 

@@ -12,40 +12,33 @@ class Player extends GameObject {
     onKeyPressed(event) {
         if (isRunning) {
             if (event.key === 'w') {
-                if (this.checkCollision(this.x, this.y - 1)) {
-                    this.grid[this.y][this.x] = null;
-                    this.y--;
-                    this.grid[this.y][this.x] = this;
-                }
+                this.move(this.y - 1, this.x);
             }
             if (event.key === 's') {
-                if (this.checkCollision(this.x, this.y + 1)) {
-                    this.grid[this.y][this.x] = null;
-                    this.y++;
-                    this.grid[this.y][this.x] = this;
-                }
+                this.move(this.y + 1, this.x);
             }
             if (event.key === 'a') {
-                if (this.checkCollision(this.x - 1, this.y)) {
-                    this.grid[this.y][this.x] = null;
-                    this.x--;
-                    this.grid[this.y][this.x] = this;
-                }
+                this.move(this.y, this.x - 1);
             }
             if (event.key === 'd') {
-                if (this.checkCollision(this.x + 1, this.y)) {
-                    this.grid[this.y][this.x] = null;
-                    this.x++;
-                    this.grid[this.y][this.x] = this;
-                }
+                this.move(this.y, this.x + 1);
             }
+        }
+    }
+    move(newY, newX) {
+        if (this.checkCollision(newY, newX)) {
+            let oldX = this.x;
+            let oldY = this.y;
+            this.x = newX;
+            this.y = newY;
+            this.grid[newY][newX] = this;
+            this.grid[oldY][oldX] = null;
             window.dispatchEvent(this.stepEvent);
         }
     }
-    checkCollision(x, y) {
+    checkCollision(y, x) {
         let canWalk = true;
-        console.log(this.grid[y][x]);
-        if (x > this.grid[0].length) {
+        if (x > this.grid[0].length - 1) {
             canWalk = false;
         }
         else if (x < 0) {
@@ -54,7 +47,7 @@ class Player extends GameObject {
         else if (y < 0) {
             canWalk = false;
         }
-        else if (y > this.grid.length) {
+        else if (y > this.grid.length - 1) {
             canWalk = false;
         }
         else if (this.grid[y][x] !== null) {
@@ -67,6 +60,9 @@ class Player extends GameObject {
         if (gameObject instanceof Stair) {
             isRunning = false;
             alert('You won!');
+        }
+        if (gameObject instanceof Zombie || gameObject instanceof Skull) {
+            this.health = 1;
         }
     }
     get health() {

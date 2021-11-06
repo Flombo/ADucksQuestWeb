@@ -8,18 +8,28 @@ class Skull extends GameObject {
     }
     walk() {
         if (this.state === SkullState.RIGHT) {
-            if (!this.checkIfOutOfBorder(this.x + 1)) {
-                if (!this.checkCollisionWithOtherGameObject(this.x + 1)) {
-                    this.x++;
-                }
-            }
+            this.move(this.x + 1);
         }
         else if (this.state === SkullState.LEFT) {
-            if (!this.checkIfOutOfBorder(this.x - 1)) {
-                if (!this.checkCollisionWithOtherGameObject(this.x - 1)) {
-                    this.x--;
-                }
+            this.move(this.x - 1);
+        }
+    }
+    move(newX) {
+        if (!this.checkIfOutOfBorder(newX)) {
+            if (!this.checkCollisionWithOtherGameObject(newX)) {
+                let oldX = this.x;
+                this.x = newX;
+                this.grid[this.y][this.x] = this;
+                this.grid[this.y][oldX] = null;
             }
+        }
+    }
+    switchWalkingState() {
+        if (this.state === SkullState.RIGHT) {
+            this.state = SkullState.LEFT;
+        }
+        else if (this.state === SkullState.LEFT) {
+            this.state = SkullState.RIGHT;
         }
     }
     checkCollisionWithOtherGameObject(x) {
@@ -43,17 +53,9 @@ class Skull extends GameObject {
             this.state = oldState;
         }
     }
-    switchWalkingState() {
-        if (this.state === SkullState.RIGHT) {
-            this.state = SkullState.LEFT;
-        }
-        else if (this.state === SkullState.LEFT) {
-            this.state = SkullState.RIGHT;
-        }
-    }
     checkIfOutOfBorder(x) {
         let isOufOfBorder = false;
-        if (x > this.grid[this.y].length) {
+        if (x > this.grid[this.y].length - 1) {
             isOufOfBorder = true;
             this.state = SkullState.LEFT;
         }
