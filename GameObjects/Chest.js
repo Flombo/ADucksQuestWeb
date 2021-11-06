@@ -36,7 +36,13 @@ class Chest extends GameObject {
         return outOfBorder;
     }
     checkCollision(newY, newX) {
-        return this.grid[newY][newX] != null;
+        let gameObject = this.grid[newY][newX];
+        let isColliding = gameObject != null;
+        if (gameObject instanceof Hole) {
+            this.grid[newY][newX] = null;
+            this.grid[this.y][this.x] = null;
+        }
+        return isColliding;
     }
 }
 //# sourceMappingURL=Chest.js.map

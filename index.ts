@@ -102,5 +102,14 @@ function init() : void {
 
     grid[y][x] = chest;
 
+    x = Math.floor(Math.random() * xGrid);
+    y = Math.floor(Math.random() * yGrid);
+
+    let hole : Hole = new Hole();
+    hole.y = y;
+    hole.x = x;
+
+    grid[y][x] = hole;
+
     rendering(grid);
 }

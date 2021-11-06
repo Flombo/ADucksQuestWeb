@@ -46,7 +46,15 @@ class Chest extends GameObject {
     }
 
     private checkCollision(newY : number, newX : number) : boolean {
-        return this.grid[newY][newX] != null;
+        let gameObject : GameObject = this.grid[newY][newX];
+        let isColliding : boolean = gameObject != null;
+
+        if(gameObject instanceof Hole) {
+            this.grid[newY][newX] = null;
+            this.grid[this.y][this.x] = null;
+        }
+
+        return isColliding;
     }
 
 }

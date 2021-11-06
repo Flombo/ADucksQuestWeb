@@ -78,6 +78,13 @@ class Player extends GameObject {
         if (gameObject instanceof Chest) {
             canWalk = this.checkChestCollision(newY, newX, gameObject);
         }
+        if (gameObject instanceof Hole) {
+            this._health--;
+            this.grid[this.y][this.x] = null;
+            setTimeout(() => {
+                this.grid[this.y][this.x] = this;
+            }, 500);
+        }
         return canWalk;
     }
     checkChestCollision(newY, newX, gameObject) {
