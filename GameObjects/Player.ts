@@ -3,10 +3,14 @@ class Player extends GameObject {
     private _health : number;
     private readonly stepEvent : CustomEvent;
     private readonly grid : Array<Array<GameObject>>;
+    private _steps : number;
+    private _score : number;
 
     constructor(grid : Array<Array<GameObject>>) {
         super();
         this._health = 3;
+        this._steps = 0;
+        this._score = 0;
         this.stepEvent = new CustomEvent<any>(
             "step",
             {
@@ -50,6 +54,7 @@ class Player extends GameObject {
 
             this.grid[newY][newX] = this;
             this.grid[oldY][oldX] = null;
+            this._steps++;
             window.dispatchEvent(this.stepEvent);
         }
     }
@@ -92,5 +97,13 @@ class Player extends GameObject {
         if(this._health - value >= 0) {
             this._health -= value;
         }
+    }
+
+    get steps() : number {
+        return this._steps;
+    }
+
+    get score() : number {
+        return this._score;
     }
 }

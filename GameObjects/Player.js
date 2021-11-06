@@ -2,6 +2,8 @@ class Player extends GameObject {
     constructor(grid) {
         super();
         this._health = 3;
+        this._steps = 0;
+        this._score = 0;
         this.stepEvent = new CustomEvent("step", {
             bubbles: true,
             cancelable: true
@@ -33,6 +35,7 @@ class Player extends GameObject {
             this.y = newY;
             this.grid[newY][newX] = this;
             this.grid[oldY][oldX] = null;
+            this._steps++;
             window.dispatchEvent(this.stepEvent);
         }
     }
@@ -72,6 +75,12 @@ class Player extends GameObject {
         if (this._health - value >= 0) {
             this._health -= value;
         }
+    }
+    get steps() {
+        return this._steps;
+    }
+    get score() {
+        return this._score;
     }
 }
 //# sourceMappingURL=Player.js.map

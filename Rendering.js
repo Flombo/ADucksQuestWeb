@@ -4,7 +4,7 @@ let secondsPassed;
 let selfGrid;
 let canvas;
 let context;
-let playerHealthBar;
+let hud;
 let isRunning;
 let showGrid;
 function rendering(grid) {
@@ -16,7 +16,7 @@ function rendering(grid) {
     canvas.width = window.innerWidth;
     canvas.style.marginLeft = "10px";
     context = canvas.getContext('2d');
-    playerHealthBar = document.getElementById('playerHealthBar');
+    hud = document.getElementById('HUD');
     isRunning = true;
     showGrid = true;
     window.addEventListener('keydown', (event) => { pauseGame(event); });
@@ -53,7 +53,7 @@ function draw() {
             if (gameObject !== null) {
                 context.fillStyle = gameObject.color;
                 context.fillRect(gameObject.x * 30, gameObject.y * 30, gameObject.width, gameObject.height);
-                updateHealthBar(gameObject);
+                updateHUD(gameObject);
             }
             if (showGrid) {
                 context.strokeStyle = 'Lightgreen';
@@ -62,16 +62,25 @@ function draw() {
         }
     }
 }
-function updateHealthBar(gameObject) {
+function updateHUD(gameObject) {
     if (gameObject instanceof Player) {
         let player = gameObject;
         let health = player.health;
-        playerHealthBar.innerText = health.toString();
+        let steps = player.steps;
+        let score = player.score;
+        hud.innerText = `${buildHealthIcons(health)} Score:${score} Steps:${steps}`;
         if (health === 0) {
             isRunning = false;
             alert("You died!");
         }
     }
+}
+function buildHealthIcons(health) {
+    let healthIcons = '';
+    for (let i = 0; i < health; i++) {
+        healthIcons += '🤍';
+    }
+    return healthIcons;
 }
 function getCurrentFPS() {
     return currentFPS;

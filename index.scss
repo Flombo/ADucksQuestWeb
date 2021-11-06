@@ -10,10 +10,11 @@ html {
         margin: 0;
         width: 100%;
 
-        #playerHealthBar {
+        #HUD {
             color: white;
             font-weight: bold;
             font-size: 20px;
+            position: sticky;
         }
 
         canvas {
