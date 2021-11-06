@@ -59,25 +59,25 @@ class Player extends GameObject {
         }
     }
 
-    private checkCollision(y : number, x : number) : boolean {
+    private checkCollision(newY : number, newX : number) : boolean {
         let canWalk : boolean = true;
 
-        if(x > this.grid[0].length - 1){
+        if(newX > this.grid[0].length - 1){
             canWalk = false;
-        } else if(x < 0) {
+        } else if(newX < 0) {
             canWalk = false;
-        } else if(y < 0) {
+        } else if(newY < 0) {
             canWalk = false;
-        } else if(y > this.grid.length - 1){
+        } else if(newY > this.grid.length - 1){
             canWalk = false;
-        } else if(this.grid[y][x] !== null) {
-            canWalk = this.checkCollisionWithOtherGameObjects(this.grid[y][x]);
+        } else if(this.grid[newY][newX] !== null) {
+            canWalk = this.checkCollisionWithOtherGameObjects(this.grid[newY][newX], newY, newX);
         }
 
         return canWalk;
     }
 
-    private checkCollisionWithOtherGameObjects(gameObject : GameObject) : boolean {
+    private checkCollisionWithOtherGameObjects(gameObject : GameObject, newY : number, newX : number) : boolean {
         let canWalk : boolean = false;
 
         if (gameObject instanceof Stair) {
@@ -97,6 +97,27 @@ class Player extends GameObject {
         if(gameObject instanceof Coin) {
             this._score++;
             canWalk = true;
+        }
+
+        if(gameObject instanceof Chest) {
+            canWalk = this.checkChestCollision(newY, newX, gameObject);
+        }
+
+        return canWalk;
+    }
+
+    private checkChestCollision(newY : number, newX : number, gameObject : GameObject) : boolean {
+        let chest : Chest = gameObject as Chest;
+        let canWalk : boolean;
+
+        if(newX > this.x) {
+            canWalk = chest.move(newY, newX + 1);
+        } else if(newX < this.x) {
+            canWalk = chest.move(newY, newX - 1);
+        } else if(newY > this.y) {
+            canWalk = chest.move(newY + 1, newX);
+        } else if(newY < this.y) {
+            canWalk = chest.move(newY - 1, newX);
         }
 
         return canWalk;

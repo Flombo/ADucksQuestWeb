@@ -93,5 +93,14 @@ function init() : void {
 
     grid[y][x] = coin;
 
+    x = Math.floor(Math.random() * xGrid);
+    y = Math.floor(Math.random() * yGrid);
+
+    let chest : Chest = new Chest(grid);
+    chest.y = y;
+    chest.x = x;
+
+    grid[y][x] = chest;
+
     rendering(grid);
 }

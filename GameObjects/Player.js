@@ -39,26 +39,26 @@ class Player extends GameObject {
             window.dispatchEvent(this.stepEvent);
         }
     }
-    checkCollision(y, x) {
+    checkCollision(newY, newX) {
         let canWalk = true;
-        if (x > this.grid[0].length - 1) {
+        if (newX > this.grid[0].length - 1) {
             canWalk = false;
         }
-        else if (x < 0) {
+        else if (newX < 0) {
             canWalk = false;
         }
-        else if (y < 0) {
+        else if (newY < 0) {
             canWalk = false;
         }
-        else if (y > this.grid.length - 1) {
+        else if (newY > this.grid.length - 1) {
             canWalk = false;
         }
-        else if (this.grid[y][x] !== null) {
-            canWalk = this.checkCollisionWithOtherGameObjects(this.grid[y][x]);
+        else if (this.grid[newY][newX] !== null) {
+            canWalk = this.checkCollisionWithOtherGameObjects(this.grid[newY][newX], newY, newX);
         }
         return canWalk;
     }
-    checkCollisionWithOtherGameObjects(gameObject) {
+    checkCollisionWithOtherGameObjects(gameObject, newY, newX) {
         let canWalk = false;
         if (gameObject instanceof Stair) {
             isRunning = false;
@@ -74,6 +74,26 @@ class Player extends GameObject {
         if (gameObject instanceof Coin) {
             this._score++;
             canWalk = true;
+        }
+        if (gameObject instanceof Chest) {
+            canWalk = this.checkChestCollision(newY, newX, gameObject);
+        }
+        return canWalk;
+    }
+    checkChestCollision(newY, newX, gameObject) {
+        let chest = gameObject;
+        let canWalk;
+        if (newX > this.x) {
+            canWalk = chest.move(newY, newX + 1);
+        }
+        else if (newX < this.x) {
+            canWalk = chest.move(newY, newX - 1);
+        }
+        else if (newY > this.y) {
+            canWalk = chest.move(newY + 1, newX);
+        }
+        else if (newY < this.y) {
+            canWalk = chest.move(newY - 1, newX);
         }
         return canWalk;
     }

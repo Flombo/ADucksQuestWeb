@@ -63,6 +63,12 @@ function init() {
     coin.y = y;
     coin.x = x;
     grid[y][x] = coin;
+    x = Math.floor(Math.random() * xGrid);
+    y = Math.floor(Math.random() * yGrid);
+    let chest = new Chest(grid);
+    chest.y = y;
+    chest.x = x;
+    grid[y][x] = chest;
     rendering(grid);
 }
 //# sourceMappingURL=index.js.map
