@@ -1,16 +1,21 @@
 let currentFPS : number;
 let oldTimestamp : number;
 let secondsPassed : number;
-let selfGrid : Array<Array<GameObject>>;
+let selfGrid : Array<GameObject>;
+let selfXGrid : number;
+let selfYGrid : number;
 let canvas : HTMLCanvasElement;
 let context : CanvasRenderingContext2D;
 let hud : HTMLElement;
 let isRunning : boolean;
 let showGrid : boolean;
+let hasRenderedGrid : boolean;
 
-
-function rendering(grid : Array<Array<GameObject>>) {
+function rendering(grid : Array<GameObject>, xGrid : number, yGrid : number) {
+    selfXGrid = xGrid;
+    selfYGrid = yGrid;
     selfGrid = grid;
+    hasRenderedGrid = false;
     oldTimestamp = 0;
     secondsPassed = 0;
     canvas = document.getElementsByTagName('canvas')[0];
@@ -21,20 +26,25 @@ function rendering(grid : Array<Array<GameObject>>) {
     hud = document.getElementById('HUD');
     isRunning = true;
     showGrid = true;
-    window.addEventListener('keydown', (event) => {pauseGame(event)});
+    window.addEventListener('keydown', (event) => {onKeyDown(event)});
     window.requestAnimationFrame((timestamp) => {gameLoop(timestamp)});
 }
 
-function pauseGame(event : KeyboardEvent) {
+function onKeyDown(event : KeyboardEvent) {
     if(event.key === 'Escape'){
-        if(isRunning) {
-            isRunning = false;
-        } else {
-            isRunning = true;
-            window.requestAnimationFrame((timestamp) => gameLoop(timestamp));
-        }
+        pauseGame();
     } else if(event.key === 'g') {
         showGrid = !showGrid;
+    }
+}
+
+function pauseGame() : void {
+    if(isRunning) {
+        isRunning = false;
+        hasRenderedGrid = false;
+    } else {
+        isRunning = true;
+        window.requestAnimationFrame((timestamp) => gameLoop(timestamp));
     }
 }
 
@@ -50,22 +60,31 @@ function gameLoop(timestamp) {
 
 function draw() {
     context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    renderGameObject();
+    renderGrid();
+}
 
-    for(let y : number = 0; y < selfGrid.length; y++){
-        for(let x : number = 0; x < selfGrid[y].length; x++) {
-            let gameObject : GameObject = selfGrid[y][x];
+function renderGameObject() : void {
+    for(let i : number = 0; i < selfGrid.length; i++) {
+        let gameObject: GameObject = selfGrid[i];
 
-            if(gameObject !== null) {
-                context.fillStyle = gameObject.color;
-                context.fillRect(gameObject.x * 30, gameObject.y * 30, gameObject.width, gameObject.height);
-                updateHUD(gameObject);
-            }
+        context.fillStyle = gameObject.color;
+        context.fillRect(gameObject.x * 30, gameObject.y * 30, gameObject.width, gameObject.height);
+        updateHUD(gameObject);
+    }
+}
 
-            if(showGrid) {
+function renderGrid() : void {
+    if(showGrid && !hasRenderedGrid) {
+
+        for (let y: number = 0; y < selfYGrid; y++) {
+            for (let x: number = 0; x < selfXGrid; x++) {
                 context.strokeStyle = 'Lightgreen';
                 context.strokeRect(x * 30, y * 30, 30, 30);
             }
         }
+
+        hasRenderedGrid = false;
     }
 }
 

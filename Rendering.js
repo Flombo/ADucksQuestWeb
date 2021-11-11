@@ -2,13 +2,19 @@ let currentFPS;
 let oldTimestamp;
 let secondsPassed;
 let selfGrid;
+let selfXGrid;
+let selfYGrid;
 let canvas;
 let context;
 let hud;
 let isRunning;
 let showGrid;
-function rendering(grid) {
+let hasRenderedGrid;
+function rendering(grid, xGrid, yGrid) {
+    selfXGrid = xGrid;
+    selfYGrid = yGrid;
     selfGrid = grid;
+    hasRenderedGrid = false;
     oldTimestamp = 0;
     secondsPassed = 0;
     canvas = document.getElementsByTagName('canvas')[0];
@@ -19,21 +25,25 @@ function rendering(grid) {
     hud = document.getElementById('HUD');
     isRunning = true;
     showGrid = true;
-    window.addEventListener('keydown', (event) => { pauseGame(event); });
+    window.addEventListener('keydown', (event) => { onKeyDown(event); });
     window.requestAnimationFrame((timestamp) => { gameLoop(timestamp); });
 }
-function pauseGame(event) {
+function onKeyDown(event) {
     if (event.key === 'Escape') {
-        if (isRunning) {
-            isRunning = false;
-        }
-        else {
-            isRunning = true;
-            window.requestAnimationFrame((timestamp) => gameLoop(timestamp));
-        }
+        pauseGame();
     }
     else if (event.key === 'g') {
         showGrid = !showGrid;
+    }
+}
+function pauseGame() {
+    if (isRunning) {
+        isRunning = false;
+        hasRenderedGrid = false;
+    }
+    else {
+        isRunning = true;
+        window.requestAnimationFrame((timestamp) => gameLoop(timestamp));
     }
 }
 function gameLoop(timestamp) {
@@ -47,19 +57,26 @@ function gameLoop(timestamp) {
 }
 function draw() {
     context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    for (let y = 0; y < selfGrid.length; y++) {
-        for (let x = 0; x < selfGrid[y].length; x++) {
-            let gameObject = selfGrid[y][x];
-            if (gameObject !== null) {
-                context.fillStyle = gameObject.color;
-                context.fillRect(gameObject.x * 30, gameObject.y * 30, gameObject.width, gameObject.height);
-                updateHUD(gameObject);
-            }
-            if (showGrid) {
+    renderGameObject();
+    renderGrid();
+}
+function renderGameObject() {
+    for (let i = 0; i < selfGrid.length; i++) {
+        let gameObject = selfGrid[i];
+        context.fillStyle = gameObject.color;
+        context.fillRect(gameObject.x * 30, gameObject.y * 30, gameObject.width, gameObject.height);
+        updateHUD(gameObject);
+    }
+}
+function renderGrid() {
+    if (showGrid && !hasRenderedGrid) {
+        for (let y = 0; y < selfYGrid; y++) {
+            for (let x = 0; x < selfXGrid; x++) {
                 context.strokeStyle = 'Lightgreen';
                 context.strokeRect(x * 30, y * 30, 30, 30);
             }
         }
+        hasRenderedGrid = false;
     }
 }
 function updateHUD(gameObject) {
