@@ -2,17 +2,13 @@ let currentFPS;
 let oldTimestamp;
 let secondsPassed;
 let selfGrid;
-let selfXGrid;
-let selfYGrid;
 let canvas;
 let context;
 let hud;
 let isRunning;
 let showGrid;
 let hasRenderedGrid;
-function rendering(grid, xGrid, yGrid) {
-    selfXGrid = xGrid;
-    selfYGrid = yGrid;
+function rendering(grid) {
     selfGrid = grid;
     hasRenderedGrid = false;
     oldTimestamp = 0;
@@ -57,25 +53,25 @@ function gameLoop(timestamp) {
 }
 function draw() {
     context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    renderGameObject();
-    renderGrid();
+    for (let y = 0; y < selfGrid.length; y++) {
+        for (let x = 0; x < selfGrid[y].length; x++) {
+            renderGameObject(y, x);
+            renderGrid(y, x);
+        }
+    }
 }
-function renderGameObject() {
-    for (let i = 0; i < selfGrid.length; i++) {
-        let gameObject = selfGrid[i];
+function renderGameObject(y, x) {
+    let gameObject = selfGrid[y][x];
+    if (gameObject !== null) {
         context.fillStyle = gameObject.color;
         context.fillRect(gameObject.x * 30, gameObject.y * 30, gameObject.width, gameObject.height);
         updateHUD(gameObject);
     }
 }
-function renderGrid() {
+function renderGrid(y, x) {
     if (showGrid && !hasRenderedGrid) {
-        for (let y = 0; y < selfYGrid; y++) {
-            for (let x = 0; x < selfXGrid; x++) {
-                context.strokeStyle = 'Lightgreen';
-                context.strokeRect(x * 30, y * 30, 30, 30);
-            }
-        }
+        context.strokeStyle = 'Lightgreen';
+        context.strokeRect(x * 30, y * 30, 30, 30);
         hasRenderedGrid = false;
     }
 }

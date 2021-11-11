@@ -11,7 +11,6 @@ function init() : void {
     let y: number;
 
     let grid : Array<Array<GameObject>> = new Array<Array<GameObject>>();
-    let grid1D : Array<GameObject> = new Array<GameObject>();
 
     for(let y : number = 0; y < yGrid; y++) {
 
@@ -30,7 +29,6 @@ function init() : void {
     stair.y = y;
 
     grid[y][x] = stair;
-    grid1D.push(stair);
 
     for(let i = 0; i < 100; i++) {
         wall = new Wall();
@@ -42,7 +40,6 @@ function init() : void {
         wall.y = y;
 
         grid[y][x] = wall;
-        grid1D.push(wall);
     }
 
     player = new Player(grid);
@@ -53,7 +50,6 @@ function init() : void {
     player.y = y;
 
     grid[y][x] = player;
-    grid1D.push(player);
 
     for(let i = 0; i < 5; i++) {
         let skull: Skull = new Skull(grid);
@@ -61,7 +57,6 @@ function init() : void {
         skull.x = 0;
         skull.y = y;
         grid[y][0] = skull;
-        grid1D.push(skull);
     }
 
     for(let i = 0; i < 5; i++) {
@@ -74,7 +69,6 @@ function init() : void {
         zombie.y = y;
 
         grid[y][x] = zombie;
-        grid1D.push(zombie);
     }
 
     x = Math.floor(Math.random() * xGrid);
@@ -85,7 +79,6 @@ function init() : void {
     hearth.x = x;
 
     grid[y][x] = hearth;
-    grid1D.push(hearth);
 
     x = Math.floor(Math.random() * xGrid);
     y = Math.floor(Math.random() * yGrid);
@@ -93,7 +86,6 @@ function init() : void {
     let coin : Coin = new Coin();
     coin.y = y;
     coin.x = x;
-    grid1D.push(coin);
 
     grid[y][x] = coin;
 
@@ -105,7 +97,6 @@ function init() : void {
     chest.x = x;
 
     grid[y][x] = chest;
-    grid1D.push(chest);
 
     x = Math.floor(Math.random() * xGrid);
     y = Math.floor(Math.random() * yGrid);
@@ -115,7 +106,6 @@ function init() : void {
     hole.x = x;
 
     grid[y][x] = hole;
-    grid1D.push(hole);
 
-    rendering(grid1D, xGrid, yGrid);
+    rendering(grid);
 }

@@ -1,9 +1,7 @@
 let currentFPS : number;
 let oldTimestamp : number;
 let secondsPassed : number;
-let selfGrid : Array<GameObject>;
-let selfXGrid : number;
-let selfYGrid : number;
+let selfGrid : Array<Array<GameObject>>;
 let canvas : HTMLCanvasElement;
 let context : CanvasRenderingContext2D;
 let hud : HTMLElement;
@@ -11,9 +9,7 @@ let isRunning : boolean;
 let showGrid : boolean;
 let hasRenderedGrid : boolean;
 
-function rendering(grid : Array<GameObject>, xGrid : number, yGrid : number) {
-    selfXGrid = xGrid;
-    selfYGrid = yGrid;
+function rendering(grid : Array<Array<GameObject>>) {
     selfGrid = grid;
     hasRenderedGrid = false;
     oldTimestamp = 0;
@@ -60,29 +56,30 @@ function gameLoop(timestamp) {
 
 function draw() {
     context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    renderGameObject();
-    renderGrid();
+
+    for(let y : number = 0; y < selfGrid.length; y++) {
+        for(let x: number = 0; x < selfGrid[y].length; x++) {
+            renderGameObject(y, x);
+            renderGrid(y, x);
+        }
+    }
 }
 
-function renderGameObject() : void {
-    for(let i : number = 0; i < selfGrid.length; i++) {
-        let gameObject: GameObject = selfGrid[i];
+function renderGameObject(y : number, x : number) : void {
+    let gameObject: GameObject = selfGrid[y][x];
 
+    if(gameObject !== null) {
         context.fillStyle = gameObject.color;
         context.fillRect(gameObject.x * 30, gameObject.y * 30, gameObject.width, gameObject.height);
         updateHUD(gameObject);
     }
 }
 
-function renderGrid() : void {
+function renderGrid(y : number, x : number) : void {
     if(showGrid && !hasRenderedGrid) {
 
-        for (let y: number = 0; y < selfYGrid; y++) {
-            for (let x: number = 0; x < selfXGrid; x++) {
-                context.strokeStyle = 'Lightgreen';
-                context.strokeRect(x * 30, y * 30, 30, 30);
-            }
-        }
+        context.strokeStyle = 'Lightgreen';
+        context.strokeRect(x * 30, y * 30, 30, 30);
 
         hasRenderedGrid = false;
     }

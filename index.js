@@ -7,7 +7,6 @@ function init() {
     let x;
     let y;
     let grid = new Array();
-    let grid1D = new Array();
     for (let y = 0; y < yGrid; y++) {
         grid[y] = new Array();
         for (let x = 0; x < xGrid; x++) {
@@ -20,7 +19,6 @@ function init() {
     stair.x = x;
     stair.y = y;
     grid[y][x] = stair;
-    grid1D.push(stair);
     for (let i = 0; i < 100; i++) {
         wall = new Wall();
         x = Math.floor(Math.random() * xGrid);
@@ -28,7 +26,6 @@ function init() {
         wall.x = x;
         wall.y = y;
         grid[y][x] = wall;
-        grid1D.push(wall);
     }
     player = new Player(grid);
     x = Math.floor(Math.random() * xGrid);
@@ -36,14 +33,12 @@ function init() {
     player.x = x;
     player.y = y;
     grid[y][x] = player;
-    grid1D.push(player);
     for (let i = 0; i < 5; i++) {
         let skull = new Skull(grid);
         let y = Math.floor(Math.random() * yGrid);
         skull.x = 0;
         skull.y = y;
         grid[y][0] = skull;
-        grid1D.push(skull);
     }
     for (let i = 0; i < 5; i++) {
         let zombie = new Zombie(grid);
@@ -52,7 +47,6 @@ function init() {
         zombie.x = x;
         zombie.y = y;
         grid[y][x] = zombie;
-        grid1D.push(zombie);
     }
     x = Math.floor(Math.random() * xGrid);
     y = Math.floor(Math.random() * yGrid);
@@ -60,13 +54,11 @@ function init() {
     hearth.y = y;
     hearth.x = x;
     grid[y][x] = hearth;
-    grid1D.push(hearth);
     x = Math.floor(Math.random() * xGrid);
     y = Math.floor(Math.random() * yGrid);
     let coin = new Coin();
     coin.y = y;
     coin.x = x;
-    grid1D.push(coin);
     grid[y][x] = coin;
     x = Math.floor(Math.random() * xGrid);
     y = Math.floor(Math.random() * yGrid);
@@ -74,14 +66,12 @@ function init() {
     chest.y = y;
     chest.x = x;
     grid[y][x] = chest;
-    grid1D.push(chest);
     x = Math.floor(Math.random() * xGrid);
     y = Math.floor(Math.random() * yGrid);
     let hole = new Hole();
     hole.y = y;
     hole.x = x;
     grid[y][x] = hole;
-    grid1D.push(hole);
-    rendering(grid1D, xGrid, yGrid);
+    rendering(grid);
 }
 //# sourceMappingURL=index.js.map
