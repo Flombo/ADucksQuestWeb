@@ -47,7 +47,7 @@ window.onload = () => {
 
     dragElement();
 
-    window.requestAnimationFrame((timestamp) => {loop()});
+    window.requestAnimationFrame(() => {loop()});
 }
 
 function onCanvasMouseDown(event : MouseEvent) {
@@ -55,10 +55,16 @@ function onCanvasMouseDown(event : MouseEvent) {
 
     if(event.button === 0) {
         isLeftMouseButtonPressed = true;
-        currentHoveredElement.color = 'white';
+        setCurrentHoveredElementColour('white')
     } else if(event.button === 2) {
         isRightMouseButtonPressed = true;
-        currentHoveredElement.color = 'black';
+        setCurrentHoveredElementColour('black');
+    }
+}
+
+function setCurrentHoveredElementColour(colour : string) {
+    if(currentHoveredElement !== undefined) {
+        currentHoveredElement.color = colour;
     }
 }
 
@@ -161,7 +167,7 @@ function onHover(event : MouseEvent) {
 
 function loop() {
     drawLevelElement();
-    window.requestAnimationFrame((timestamp) => loop());
+    window.requestAnimationFrame(() => loop());
 }
 
 function drawLevelElement() {

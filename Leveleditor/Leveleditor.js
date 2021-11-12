@@ -39,17 +39,22 @@ window.onload = () => {
     showElementsButton.addEventListener('click', onShowElementsButtonClicked);
     resetButton.addEventListener('click', resetSlider);
     dragElement();
-    window.requestAnimationFrame((timestamp) => { loop(); });
+    window.requestAnimationFrame(() => { loop(); });
 };
 function onCanvasMouseDown(event) {
     event.preventDefault();
     if (event.button === 0) {
         isLeftMouseButtonPressed = true;
-        currentHoveredElement.color = 'white';
+        setCurrentHoveredElementColour('white');
     }
     else if (event.button === 2) {
         isRightMouseButtonPressed = true;
-        currentHoveredElement.color = 'black';
+        setCurrentHoveredElementColour('black');
+    }
+}
+function setCurrentHoveredElementColour(colour) {
+    if (currentHoveredElement !== undefined) {
+        currentHoveredElement.color = colour;
     }
 }
 function onCanvasMouseUp(event) {
@@ -138,7 +143,7 @@ function onHover(event) {
 }
 function loop() {
     drawLevelElement();
-    window.requestAnimationFrame((timestamp) => loop());
+    window.requestAnimationFrame(() => loop());
 }
 function drawLevelElement() {
     contextLeveleditor.clearRect(0, 0, window.innerWidth, window.innerHeight);
