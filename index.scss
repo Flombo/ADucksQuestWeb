@@ -21,5 +21,26 @@ html {
             margin: 0;
             top: 0;
         }
+
+        nav {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        #elementsPopup {
+
+            position: absolute;
+            width: 40%;
+            height: 75%;
+            background-color: white;
+            visibility: visible;
+            top: 0;
+            left: 60%;
+
+            &.hidden {
+                visibility: hidden;
+            }
+        }
     }
 }

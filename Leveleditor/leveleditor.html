@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Leveleditor</title>
+    <script type="application/javascript" src="../Game/GameObjects/GameObject.js"></script>
+    <script type="application/javascript" src="./LevelEditorElement.js"></script>
+    <script type="application/javascript" src="./Leveleditor.js"></script>
+    <link rel="stylesheet" href="../index.css" type="text/css">
+</head>
+<body>
+    <nav>
+      <button type="submit">Save</button>
+      <button type="reset" id="resetButton">Reset</button>
+        <div>
+            <input type="range" id="ySlider" value="5" min="5" max="30"/>
+            <input type="range" id="xSlider" value="5" min="5" max="40">
+        </div>
+        <button id="showElementsButton">Show Elements</button>
+    </nav>
+    <canvas></canvas>
+    <div id="elementsPopup" class="hidden">
+        <p></p>
+    </div>
+</body>
+</html>
