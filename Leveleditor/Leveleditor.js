@@ -13,6 +13,8 @@ let xSlider;
 let isLeftMouseButtonPressed = false;
 let isRightMouseButtonPressed = false;
 let pos1, pos2, pos3, pos4 = 0;
+let cellHeight;
+let cellWidth;
 window.onload = () => {
     oldHoveredElementX = 0;
     oldHoveredElementY = 0;
@@ -27,8 +29,8 @@ window.onload = () => {
     canvasLeveleditor.height = window.innerHeight;
     canvasLeveleditor.width = window.innerWidth;
     contextLeveleditor = canvasLeveleditor.getContext('2d');
-    ySlider.addEventListener('change', () => map = generateMap(Number.parseInt(ySlider.value), Number.parseInt(xSlider.value)));
-    xSlider.addEventListener('change', () => map = generateMap(Number.parseInt(ySlider.value), Number.parseInt(xSlider.value)));
+    ySlider.addEventListener('change', onSliderChanged);
+    xSlider.addEventListener('change', onSliderChanged);
     canvasLeveleditor.addEventListener('mousemove', (event) => onHover(event));
     canvasLeveleditor.addEventListener('mousedown', (event) => onCanvasMouseDown(event));
     canvasLeveleditor.oncontextmenu = (event) => {
@@ -41,6 +43,16 @@ window.onload = () => {
     dragElement();
     window.requestAnimationFrame(() => { loop(); });
 };
+function onSliderChanged() {
+    map = generateMap(Number.parseInt(ySlider.value), Number.parseInt(xSlider.value));
+    setSliderLabelText();
+}
+function setSliderLabelText() {
+    let sliderLabelX = xSlider.labels[0];
+    let sliderLabelY = ySlider.labels[0];
+    sliderLabelX.textContent = `X-Axis: ${xSlider.value}`;
+    sliderLabelY.textContent = `Y-Axis: ${ySlider.value}`;
+}
 function onCanvasMouseDown(event) {
     event.preventDefault();
     if (event.button === 0) {
@@ -105,6 +117,7 @@ function closeDragElement() {
 function resetSlider() {
     ySlider.value = '5';
     xSlider.value = '5';
+    setSliderLabelText();
     map = generateMap(5, 5);
 }
 function onShowElementsButtonClicked() {
@@ -118,14 +131,14 @@ function onShowElementsButtonClicked() {
 function onHover(event) {
     let clientX = event.clientX;
     let clientY = event.clientY - navHeight;
-    let mapWidth = map[0].length * 30;
-    let mapHeight = map.length * 30;
+    let mapWidth = map[0].length * cellWidth;
+    let mapHeight = map.length * cellHeight;
     if (clientY <= mapHeight && clientX <= mapWidth) {
-        let y = Math.floor(clientY / 30);
-        let x = Math.floor(clientX / 30);
+        let y = Math.floor(clientY / cellHeight);
+        let x = Math.floor(clientX / cellWidth);
         if (x < map[0].length && x >= 0
             && y < map.length && y >= 0) {
-            map[oldHoveredElementY][oldHoveredElementX].strokeColour = 'Lightgreen';
+            map[oldHoveredElementY][oldHoveredElementX].strokeColour = 'White';
             map[oldHoveredElementY][oldHoveredElementX].lineWidth = 1;
             currentHoveredElement = map[y][x];
             currentHoveredElement.strokeColour = 'Salmon';
@@ -151,10 +164,10 @@ function drawLevelElement() {
         for (let x = 0; x < map[y].length; x++) {
             let levelEditorElement = map[y][x];
             contextLeveleditor.fillStyle = levelEditorElement.color;
-            contextLeveleditor.fillRect(x * 30, y * 30, 30, 30);
+            contextLeveleditor.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
             contextLeveleditor.strokeStyle = levelEditorElement.strokeColour;
             contextLeveleditor.lineWidth = levelEditorElement.lineWidth;
-            contextLeveleditor.strokeRect(x * 30, y * 30, 30, 30);
+            contextLeveleditor.strokeRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
         }
     }
 }
@@ -166,6 +179,8 @@ function generateMap(yMax, xMax) {
             map[y][x] = new LevelEditorElement();
         }
     }
+    cellHeight = (window.innerHeight - navHeight) / map.length;
+    cellWidth = window.innerWidth / map[0].length;
     return map;
 }
 //# sourceMappingURL=Leveleditor.js.map

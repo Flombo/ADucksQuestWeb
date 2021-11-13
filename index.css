@@ -24,6 +24,7 @@ html body nav {
   display: flex;
   flex-direction: row;
   align-items: center;
+  color: white;
 }
 html body #elementsPopup {
   position: absolute;

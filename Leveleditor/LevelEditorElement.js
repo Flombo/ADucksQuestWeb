@@ -2,7 +2,7 @@ class LevelEditorElement extends GameObject {
     constructor() {
         super();
         this._elementCode = 'w';
-        this._strokeColour = 'Lightgreen';
+        this._strokeColour = 'White';
         this._lineWidth = 1;
         this.color = 'black';
     }

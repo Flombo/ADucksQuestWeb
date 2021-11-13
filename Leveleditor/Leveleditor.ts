@@ -13,6 +13,8 @@ let xSlider : HTMLInputElement;
 let isLeftMouseButtonPressed : boolean = false;
 let isRightMouseButtonPressed : boolean = false;
 let pos1, pos2, pos3, pos4 = 0;
+let cellHeight : number;
+let cellWidth : number;
 
 window.onload = () => {
     oldHoveredElementX = 0;
@@ -30,8 +32,8 @@ window.onload = () => {
     canvasLeveleditor.width = window.innerWidth;
     contextLeveleditor = canvasLeveleditor.getContext('2d');
 
-    ySlider.addEventListener('change', () => map = generateMap(Number.parseInt(ySlider.value), Number.parseInt(xSlider.value)));
-    xSlider.addEventListener('change', () => map = generateMap(Number.parseInt(ySlider.value), Number.parseInt(xSlider.value)));
+    ySlider.addEventListener('change', onSliderChanged);
+    xSlider.addEventListener('change', onSliderChanged);
 
     canvasLeveleditor.addEventListener('mousemove', (event : MouseEvent) => onHover(event));
     canvasLeveleditor.addEventListener('mousedown', (event : MouseEvent) => onCanvasMouseDown(event));
@@ -48,6 +50,19 @@ window.onload = () => {
     dragElement();
 
     window.requestAnimationFrame(() => {loop()});
+}
+
+function onSliderChanged() {
+    map = generateMap(Number.parseInt(ySlider.value), Number.parseInt(xSlider.value));
+    setSliderLabelText();
+}
+
+function setSliderLabelText() {
+    let sliderLabelX : HTMLLabelElement = xSlider.labels[0];
+    let sliderLabelY : HTMLLabelElement = ySlider.labels[0];
+
+    sliderLabelX.textContent = `X-Axis: ${xSlider.value}`;
+    sliderLabelY.textContent = `Y-Axis: ${ySlider.value}`;
 }
 
 function onCanvasMouseDown(event : MouseEvent) {
@@ -120,6 +135,9 @@ function closeDragElement() {
 function resetSlider() {
     ySlider.value = '5';
     xSlider.value = '5';
+
+    setSliderLabelText();
+
     map = generateMap(5, 5);
 }
 
@@ -136,17 +154,17 @@ function onHover(event : MouseEvent) {
     let clientX : number = event.clientX;
     let clientY : number = event.clientY - navHeight;
 
-    let mapWidth : number = map[0].length * 30;
-    let mapHeight : number = map.length * 30;
+    let mapWidth : number = map[0].length * cellWidth;
+    let mapHeight : number = map.length * cellHeight;
 
     if(clientY <= mapHeight && clientX <= mapWidth) {
-        let y : number = Math.floor(clientY / 30);
-        let x : number = Math.floor(clientX / 30);
+        let y : number = Math.floor(clientY / cellHeight);
+        let x : number = Math.floor(clientX / cellWidth);
 
         if(x < map[0].length && x >= 0
             && y < map.length && y >= 0) {
 
-            map[oldHoveredElementY][oldHoveredElementX].strokeColour = 'Lightgreen';
+            map[oldHoveredElementY][oldHoveredElementX].strokeColour = 'White';
             map[oldHoveredElementY][oldHoveredElementX].lineWidth = 1;
 
             currentHoveredElement = map[y][x];
@@ -178,11 +196,11 @@ function drawLevelElement() {
             let levelEditorElement : LevelEditorElement = map[y][x];
 
             contextLeveleditor.fillStyle = levelEditorElement.color;
-            contextLeveleditor.fillRect(x * 30, y * 30, 30, 30);
+            contextLeveleditor.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
 
             contextLeveleditor.strokeStyle = levelEditorElement.strokeColour;
             contextLeveleditor.lineWidth = levelEditorElement.lineWidth;
-            contextLeveleditor.strokeRect(x * 30, y * 30, 30, 30);
+            contextLeveleditor.strokeRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
         }
     }
 }
@@ -196,6 +214,9 @@ function generateMap(yMax : number, xMax : number) : Array<Array<LevelEditorElem
             map[y][x] = new LevelEditorElement();
         }
     }
+
+    cellHeight = (window.innerHeight - navHeight) / map.length;
+    cellWidth = window.innerWidth / map[0].length;
 
     return map;
 }
