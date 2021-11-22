@@ -10,6 +10,8 @@ class Leveleditor {
         this.elementsPopup = document.getElementById('elementsPopup');
         this.ySlider = document.getElementById('ySlider');
         this.xSlider = document.getElementById('xSlider');
+        this.ySliderInput = document.getElementById('ySliderInput');
+        this.xSliderInput = document.getElementById('xSliderInput');
         this.map = this.generateMap(5, 5);
         this.canvasLeveleditor = document.getElementsByTagName('canvas')[0];
         this.canvasLeveleditor.height = window.innerHeight;
@@ -17,6 +19,8 @@ class Leveleditor {
         this.contextLeveleditor = this.canvasLeveleditor.getContext('2d');
         this.ySlider.addEventListener('change', () => this.onSliderChanged());
         this.xSlider.addEventListener('change', () => this.onSliderChanged());
+        this.ySliderInput.addEventListener('change', () => this.onSliderInputChanged());
+        this.xSliderInput.addEventListener('change', () => this.onSliderInputChanged());
         this.canvasLeveleditor.addEventListener('mousemove', (event) => this.onHover(event));
         this.canvasLeveleditor.addEventListener('mousedown', (event) => this.onCanvasMouseDown(event));
         this.canvasLeveleditor.oncontextmenu = (event) => {
@@ -31,15 +35,15 @@ class Leveleditor {
             this.loop();
         });
     }
-    onSliderChanged() {
-        this.map = this.generateMap(Number.parseInt(this.ySlider.value), Number.parseInt(this.xSlider.value));
-        this.setSliderLabelText();
+    onSliderInputChanged() {
+        this.xSlider.value = this.xSliderInput.value;
+        this.ySlider.value = this.ySliderInput.value;
+        this.onSliderChanged();
     }
-    setSliderLabelText() {
-        let sliderLabelX = this.xSlider.labels[0];
-        let sliderLabelY = this.ySlider.labels[0];
-        sliderLabelX.textContent = `X-Axis: ${this.xSlider.value}`;
-        sliderLabelY.textContent = `Y-Axis: ${this.ySlider.value}`;
+    onSliderChanged() {
+        this.xSliderInput.value = this.xSlider.value;
+        this.ySliderInput.value = this.ySlider.value;
+        this.map = this.generateMap(Number.parseInt(this.ySlider.value), Number.parseInt(this.xSlider.value));
     }
     onCanvasMouseDown(event) {
         event.preventDefault();
@@ -69,7 +73,8 @@ class Leveleditor {
     resetSlider() {
         this.ySlider.value = '5';
         this.xSlider.value = '5';
-        this.setSliderLabelText();
+        this.xSliderInput.value = '5';
+        this.ySliderInput.value = '5';
         this.map = this.generateMap(5, 5);
     }
     onShowElementsButtonClicked() {

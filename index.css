@@ -26,6 +26,9 @@ html body nav {
   align-items: center;
   color: white;
 }
+html body nav input {
+  max-width: 100px;
+}
 html body #elementsPopup {
   position: absolute;
   width: 40%;
