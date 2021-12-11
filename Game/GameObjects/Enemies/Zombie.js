@@ -4,7 +4,7 @@ class Zombie extends GameObject {
         this.color = 'Violet';
         this.state = ZombieState.RIGHT;
         this.grid = grid;
-        this.walkingChoices = new Array();
+        this.walkingChoices = [];
         this.walkingChoices.push(ZombieState.RIGHT, ZombieState.UP, ZombieState.LEFT, ZombieState.DOWN);
         window.addEventListener('step', () => this.walk());
     }

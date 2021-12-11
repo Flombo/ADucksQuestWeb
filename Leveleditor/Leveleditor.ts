@@ -109,6 +109,8 @@ class Leveleditor {
         this.xSliderInput.value = '5';
         this.ySliderInput.value = '5';
 
+        this.map = null;
+
         this.map = this.generateMap(5, 5);
     }
 
@@ -169,9 +171,11 @@ class Leveleditor {
                 this.contextLeveleditor.fillStyle = levelEditorElement.color;
                 this.contextLeveleditor.fillRect(x * this.cellWidth, y * this.cellHeight, this.cellWidth, this.cellHeight);
 
-                this.contextLeveleditor.strokeStyle = levelEditorElement.strokeColour;
-                this.contextLeveleditor.lineWidth = levelEditorElement.lineWidth;
-                this.contextLeveleditor.strokeRect(x * this.cellWidth, y * this.cellHeight, this.cellWidth, this.cellHeight);
+                if(levelEditorElement.strokeColour !== 'White') {
+                    this.contextLeveleditor.strokeStyle = levelEditorElement.strokeColour;
+                    this.contextLeveleditor.lineWidth = levelEditorElement.lineWidth;
+                    this.contextLeveleditor.strokeRect(x * this.cellWidth, y * this.cellHeight, this.cellWidth, this.cellHeight);
+                }
             }
         }
     }
