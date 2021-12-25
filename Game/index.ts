@@ -107,5 +107,5 @@ function init() : void {
 
     grid[y][x] = hole;
 
-    rendering(grid);
+    rendering(FOVGridBuilder.buildFOVGridBuilder(grid, player.x, player.y, player.fov), grid);
 }

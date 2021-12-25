@@ -4,12 +4,16 @@ class Player extends GameObject {
         this._health = 3;
         this._steps = 0;
         this._score = 0;
+        this._fov = 5;
         this.stepEvent = new CustomEvent("step", {
             bubbles: true,
             cancelable: true
         });
         this.grid = grid;
         window.addEventListener('keypress', (event) => this.onKeyPressed(event));
+    }
+    get fov() {
+        return this._fov;
     }
     onKeyPressed(event) {
         if (isRunning) {
@@ -25,6 +29,7 @@ class Player extends GameObject {
             if (event.key === 'd') {
                 this.move(this.y, this.x + 1);
             }
+            setFOVGrid(FOVGridBuilder.buildFOVGridBuilder(this.grid, this.x, this.y, this._fov));
         }
     }
     move(newY, newX) {
@@ -83,6 +88,7 @@ class Player extends GameObject {
             this.grid[this.y][this.x] = null;
             setTimeout(() => {
                 this.grid[this.y][this.x] = this;
+                setFOVGrid(FOVGridBuilder.buildFOVGridBuilder(this.grid, this.x, this.y, this._fov));
             }, 500);
         }
         return canWalk;

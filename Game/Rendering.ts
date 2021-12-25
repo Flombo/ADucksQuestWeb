@@ -1,6 +1,7 @@
 let currentFPS : number;
 let oldTimestamp : number;
 let secondsPassed : number;
+let fovGrid : Array<Array<GameObject>>;
 let selfGrid : Array<Array<GameObject>>;
 let canvas : HTMLCanvasElement;
 let context : CanvasRenderingContext2D;
@@ -9,7 +10,8 @@ let isRunning : boolean;
 let showGrid : boolean;
 let hasRenderedGrid : boolean;
 
-function rendering(grid : Array<Array<GameObject>>) {
+function rendering(fovGridInit : Array<Array<GameObject>>, grid : Array<Array<GameObject>>) {
+    fovGrid = fovGridInit;
     selfGrid = grid;
     hasRenderedGrid = false;
     oldTimestamp = 0;
@@ -21,9 +23,13 @@ function rendering(grid : Array<Array<GameObject>>) {
     context = canvas.getContext('2d');
     hud = document.getElementById('HUD');
     isRunning = true;
-    showGrid = true;
+    showGrid = false;
     window.addEventListener('keydown', (event) => {onKeyDown(event)});
     window.requestAnimationFrame((timestamp) => {gameLoop(timestamp)});
+}
+
+function setFOVGrid(newFOVGrid : Array<Array<GameObject>>) {
+    fovGrid = newFOVGrid;
 }
 
 function onKeyDown(event : KeyboardEvent) {
@@ -57,32 +63,53 @@ function gameLoop(timestamp) {
 function draw() {
     context.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-    for(let y : number = 0; y < selfGrid.length; y++) {
-        for(let x: number = 0; x < selfGrid[y].length; x++) {
+    for(let y : number = 0; y < fovGrid.length; y++) {
+        for(let x: number = 0; x < fovGrid[y].length; x++) {
             renderGameObject(y, x);
-            renderGrid(y, x);
+        }
+    }
+
+    if(showGrid && !hasRenderedGrid) {
+        for (let y : number = 0; y < selfGrid.length; y++) {
+            for (let x : number = 0; x < selfGrid[y].length; x++) {
+                renderGrid(y, x);
+            }
         }
     }
 }
 
 function renderGameObject(y : number, x : number) : void {
-    let gameObject: GameObject = selfGrid[y][x];
+    let gameObject: GameObject = fovGrid[y][x];
 
     if(gameObject !== null) {
         context.fillStyle = gameObject.color;
         context.fillRect(gameObject.x * 30, gameObject.y * 30, gameObject.width, gameObject.height);
         updateHUD(gameObject);
+        renderFOVSquare(gameObject);
+    }
+}
+
+function renderFOVSquare(gameObject : GameObject) {
+    if(gameObject instanceof  Player) {
+        context.strokeStyle = 'white';
+        context.strokeRect(
+            Math.ceil(
+                gameObject.x - fovGrid[0].length / 2
+            ) * 30,
+            Math.ceil(
+                gameObject.y - fovGrid.length / 2
+            ) * 30,
+            fovGrid[0].length * 30,
+            fovGrid.length * 30
+        );
     }
 }
 
 function renderGrid(y : number, x : number) : void {
-    if(showGrid && !hasRenderedGrid) {
+    context.strokeStyle = 'Lightgreen';
+    context.strokeRect(x * 30, y * 30, 30, 30);
 
-        context.strokeStyle = 'Lightgreen';
-        context.strokeRect(x * 30, y * 30, 30, 30);
-
-        hasRenderedGrid = false;
-    }
+    hasRenderedGrid = false;
 }
 
 function updateHUD(gameObject : GameObject) {

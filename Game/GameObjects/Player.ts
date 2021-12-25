@@ -1,16 +1,21 @@
 class Player extends GameObject {
+    get fov(): number {
+        return this._fov;
+    }
 
     private _health : number;
     private readonly stepEvent : CustomEvent;
     private readonly grid : Array<Array<GameObject>>;
     private _steps : number;
     private _score : number;
+    private _fov : number;
 
     constructor(grid : Array<Array<GameObject>>) {
         super();
         this._health = 3;
         this._steps = 0;
         this._score = 0;
+        this._fov = 5;
         this.stepEvent = new CustomEvent<any>(
             "step",
             {
@@ -41,6 +46,7 @@ class Player extends GameObject {
                 this.move(this.y, this.x + 1);
             }
 
+            setFOVGrid(FOVGridBuilder.buildFOVGridBuilder(this.grid, this.x, this.y, this._fov));
         }
     }
 
@@ -109,6 +115,7 @@ class Player extends GameObject {
 
             setTimeout(() => {
                 this.grid[this.y][this.x] = this;
+                setFOVGrid(FOVGridBuilder.buildFOVGridBuilder(this.grid, this.x, this.y, this._fov));
             }, 500)
         }
 
