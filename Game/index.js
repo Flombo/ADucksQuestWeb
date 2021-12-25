@@ -50,10 +50,10 @@ function init() {
     }
     x = Math.floor(Math.random() * xGrid);
     y = Math.floor(Math.random() * yGrid);
-    let hearth = new Heart();
-    hearth.y = y;
-    hearth.x = x;
-    grid[y][x] = hearth;
+    let heart = new Heart();
+    heart.y = y;
+    heart.x = x;
+    grid[y][x] = heart;
     x = Math.floor(Math.random() * xGrid);
     y = Math.floor(Math.random() * yGrid);
     let coin = new Coin();
