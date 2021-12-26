@@ -31,15 +31,10 @@ class FOVGridBuilder {
         }
         let fovGrid = grid.slice(startY, endY + 1).map(fovGridY => fovGridY
             .slice(startX, endX + 1));
-        console.log(fovGrid);
         return fovGrid;
     }
     static calculateFOVMaximumSteps(max, playerPosition) {
-        let steps = 0;
-        while (playerPosition + steps <= max) {
-            steps++;
-        }
-        return steps;
+        return max % playerPosition;
     }
 }
 //# sourceMappingURL=FOVGridBuilder.js.map

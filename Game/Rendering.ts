@@ -41,6 +41,8 @@ function onKeyDown(event : KeyboardEvent) {
 }
 
 function pauseGame() : void {
+    //if the games is paused,
+    //the hasRenderedGrid needs to be set to false for rendering it after the game has resumed, and it was enabled.
     if(isRunning) {
         isRunning = false;
         hasRenderedGrid = false;
@@ -69,6 +71,8 @@ function draw() {
         }
     }
 
+    //For drawing the grid, every element has to be iterated.
+    //The grid will only be drawn once the player has pressed 'g'.
     if(showGrid && !hasRenderedGrid) {
         for (let y : number = 0; y < selfGrid.length; y++) {
             for (let x : number = 0; x < selfGrid[y].length; x++) {
@@ -92,12 +96,38 @@ function renderGameObject(y : number, x : number) : void {
 function renderFOVSquare(gameObject : GameObject) {
     if(gameObject instanceof  Player) {
         context.strokeStyle = 'white';
+
+        //Default coordinates
+        let y : number = gameObject.y - fovGrid.length / 2;
+        let x : number = gameObject.x - fovGrid[0].length / 2;
+
+        //Because the fovGrid gets smaller and doesn't scale to the optimum length,
+        //y and x have to be set to zero when they are lesser than zero for readjusting the fovGrid.
+        if(y < 0) {
+            y = 0;
+        }
+
+        if(x < 0) {
+            x = 0;
+        }
+
+        //Because the fovGrid gets smaller and would overflow the level maximum boundaries,
+        //y and x should be set to the player y-/x-position minus the fov.
+        //The fov plus the current player position acts as the start coordinates for the shortened fovGrid.
+        if(gameObject.y > (selfGrid.length - 1) / 2) {
+            y = gameObject.y - gameObject.fov;
+        }
+
+        if(gameObject.x > (selfGrid[0].length -1) / 2) {
+            x = gameObject.x - gameObject.fov;
+        }
+
         context.strokeRect(
             Math.ceil(
-                gameObject.x - fovGrid[0].length / 2
+                x
             ) * 30,
             Math.ceil(
-                gameObject.y - fovGrid.length / 2
+                y
             ) * 30,
             fovGrid[0].length * 30,
             fovGrid.length * 30

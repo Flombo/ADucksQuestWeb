@@ -45,18 +45,11 @@ class FOVGridBuilder {
                     )
         );
 
-        console.log(fovGrid);
         return fovGrid;
     }
 
     private static calculateFOVMaximumSteps(max : number, playerPosition : number) : number {
-        let steps : number = 0;
-
-        while(playerPosition + steps <= max) {
-            steps++;
-        }
-
-        return steps;
+        return max % playerPosition;
     }
 
 }
